@@ -9,9 +9,12 @@
 
 ## Table of Contents
 
+- [Motivation](#motivation)
 - [Install](#install)
 - [Usage](#usage)
 - [License](#license)
+
+## Motivation
 
 ## Install
 
