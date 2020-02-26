@@ -1,0 +1,19 @@
+{
+  "name": "aeon",
+  "version": "0.0.1",
+  "description": "A Date Picker Web Component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lamplightdev/aeon.git"
+  },
+  "author": "Chris Haynes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lamplightdev/aeon/issues"
+  },
+  "homepage": "https://github.com/lamplightdev/aeon#readme"
+}
