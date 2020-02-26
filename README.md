@@ -1,6 +1,6 @@
 # aeon
 
-> A lean date picker for when
+> A lean date picker that can be used anywhere
 
 - **No dependencies** - a standalone vanilla JS web component
 - **Small** - 3.5kb gzipped (2.8kb brotli)
@@ -10,6 +10,7 @@
 ## Table of Contents
 
 - [Install](#install)
+- [Usage](#usage)
 - [License](#license)
 
 ## Install
@@ -19,6 +20,8 @@ Install using [npm](https://npmjs.com):
 ```sh
 npm install --save @lamplightdev/aeon
 ```
+
+## Usage
 
 ## License
 
