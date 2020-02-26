@@ -6,7 +6,8 @@ class DatePicker extends HTMLElement {
       'start-year',
       'end-year',
       'start-day',
-      'default-date'
+      'default-date',
+      'use-native'
     ];
   }
 
@@ -15,6 +16,13 @@ class DatePicker extends HTMLElement {
 
     this.attachShadow({ mode: 'open' });
     this.$ = this.shadowRoot.querySelector.bind(this.shadowRoot);
+    try {
+      const input = document.createElement('input');
+      input.type = 'date';
+      this._hasNative = input.type === 'date';
+    } catch (error) {
+      this._hasNative = false;
+    }
 
     this.onClickOutside = this.onClickOutside.bind(this);
   }
@@ -39,13 +47,21 @@ class DatePicker extends HTMLElement {
           display: none;
         }
 
-        .week {
+        :host(.has-native) slot {
+          display: none;
+        }
+
+        :host(.has-native) slot:not([name]) {
+          display: contents;
+        }
+
+        #container .week {
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
-        select {
+        #container select {
           -webkit-appearance: none;
           -moz-appearance: none;
           padding: 0.5rem;
@@ -58,16 +74,16 @@ class DatePicker extends HTMLElement {
           width: 100%;
         }
 
-        .select {
+        #container .select {
           width: 50%;
           position: relative;
         }
 
-        .select + .select {
+        #container .select + .select {
           margin-left: 1rem;
         }
 
-        .select .indicator {
+        #container .select .indicator {
           position: absolute;
           top: 0;
           bottom: 0;
@@ -77,7 +93,7 @@ class DatePicker extends HTMLElement {
           align-items: center;
         }
 
-        .day, .date, button {
+        #container .day, #container .date, #container button {
           color: var(--color);
           background-color: transparent;
           border: 0;
@@ -96,37 +112,37 @@ class DatePicker extends HTMLElement {
           justify-content: center;
         }
 
-        .date {
+        #container .date {
           border: 1px solid var(--hintColor);
           border-width: 0 0 1px 1px;
         }
 
-        .date:last-child {
+        #container .date:last-child {
           border-right-width: 1px;
         }
 
-        .date.last + .spacer {
+        #container .date.last + .spacer {
           border-left-width: 1px;
         }
 
-        .week:nth-child(2) .date:not(.spacer) {
+        #container .week:nth-child(2) .date:not(.spacer) {
           border-top-width: 1px;
         }
 
-        .week:last-child .spacer {
+        #container .week:last-child .spacer {
           border-right-width: 0;
           border-bottom-width: 0;
         }
 
-        .date.today {
+        #container .date.today {
           font-weight: bold;
         }
 
-        .date:hover, .date.today {
+        #container .date:hover, .date.today {
           font-size: 1.3rem;
         }
 
-        .date.spacer {
+        #container .date.spacer {
           border-left-width: 0;
           pointer-events: none;
         }
@@ -168,7 +184,7 @@ class DatePicker extends HTMLElement {
           display: flex;
         }
 
-        #year-month {
+        #container #year-month {
           display: flex;
           width: 100%;
         }
@@ -223,17 +239,15 @@ class DatePicker extends HTMLElement {
 
     const slot = this.$('slot');
     slot.addEventListener('slotchange', event => {
-      this._dateInput = slot.assignedElements()[0];
+      this._dateInput = slot.assignedNodes().find(el => el.tagName);
       if (this._dateInput) {
         this._dateInput.addEventListener(
           'change',
           this.onInputChange.bind(this)
         );
         this._dateOutput.placeholder = this._dateInput.placeholder;
+        this.value = this._dateInput.value;
       }
-      this.updateFromString(
-        this._dateInput ? this._dateInput.value : undefined
-      );
     });
 
     this._dateOutput = document.createElement('input');
@@ -248,15 +262,28 @@ class DatePicker extends HTMLElement {
 
     this.init();
     this.update();
+
+    this._connected = true;
   }
 
   disconnectedCallback() {
     document.removeEventListener('click', this.onClickOutside);
+
+    this._connected = false;
   }
 
-  attributeChangedCallback() {
-    this.init();
-    this.updateFromString(this._dateInput ? this._dateInput.value : undefined);
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'use-native') {
+      if (newValue !== null && this._hasNative) {
+        this.classList.add('has-native');
+      } else {
+        this.classList.remove('has-native');
+      }
+    }
+
+    if (this._connected) {
+      this.init();
+    }
   }
 
   init() {
@@ -393,6 +420,9 @@ class DatePicker extends HTMLElement {
 
   showCalendar() {
     if (!this.$('#container').classList.contains('show')) {
+      this.updateFromString(
+        this._dateInput ? this._dateInput.value : undefined
+      );
       this.$('#container').classList.add('show');
       this.$('.today').focus();
       document.addEventListener('click', this.onClickOutside);
@@ -515,6 +545,15 @@ class DatePicker extends HTMLElement {
     return this.getAttribute('default-date');
   }
 
+  set useNative(val) {
+    val
+      ? this.setAttribute('use-native', '')
+      : this.removeAttribute('use-native');
+  }
+  get hasNative() {
+    return this.hasAttribute('useNative');
+  }
+
   render() {
     let workingDate = new Date(this._year, this._month, 1, 12);
     const monthStartDay = workingDate.getDay();
@@ -534,7 +573,7 @@ class DatePicker extends HTMLElement {
         ${this._days.map(day => `<div class="day">${day.name}</div>`).join('')}
       </div>
 
-      ${[...Array(6).keys()]
+      ${[0, 1, 2, 3, 4, 5]
         .map(() => {
           if (count > daysInMonth) return null;
 
