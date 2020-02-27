@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <title>DatePicker</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="/src/app.js" type="module"></script>
+  </head>
+  <body>
+    <h1>
+      Date Picker
+    </h1>
+
+    <form>
+      <!--p>
+        <input type="date" />
+      </p>
+      <p>
+        <aeon-datepicker>
+          <input id="date" type="date" value="2020-04-06" />
+        </aeon-datepicker>
+      </p>
+      <p>
+        <aeon-datepicker>
+          <input
+            id="date2"
+            type="date"
+            value="2020-04-06"
+            placeholder="Start date"
+          />
+        </aeon-datepicker>
+      </p-->
+      <p>
+        <aeon-datepicker locale="es" style="--rgb: 170, 10, 10">
+          <input type="date" />
+        </aeon-datepicker>
+      </p>
+      <button>
+        Go
+      </button>
+      <p>
+        <input />
+      </p>
+    </form>
+
+    <script>
+      const form = document.querySelector('form');
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        console.log(form.querySelector('#date').value);
+      });
+      form.addEventListener('change', function(event) {
+        console.log('change', event);
+      });
+    </script>
+  </body>
+</html>
