@@ -3,6 +3,18 @@ import AeonElement from './aeon.js';
 class Calendar extends AeonElement {
   static get props() {
     return {
+      date: {
+        type: String
+      },
+      time: {
+        type: String
+      },
+      value: {
+        type: Object
+      },
+      showtime: {
+        type: Boolean
+      },
       locale: {
         type: String
       },
@@ -13,9 +25,6 @@ class Calendar extends AeonElement {
         type: String
       },
       startday: {
-        type: String
-      },
-      value: {
         type: String
       },
       days: {
@@ -30,6 +39,12 @@ class Calendar extends AeonElement {
       day: {
         type: Number
       },
+      hours: {
+        type: Number
+      },
+      minutes: {
+        type: Number
+      },
       open: {
         type: Boolean
       }
@@ -39,6 +54,7 @@ class Calendar extends AeonElement {
   constructor() {
     super();
 
+    this.showTime = false;
     this.days = [];
     this.open = false;
   }
@@ -141,9 +157,18 @@ class Calendar extends AeonElement {
           justify-content: space-between;
         }
 
-        #year-month {
+        #year-month, #hours-minutes {
           display: flex;
           width: 100%;
+        }
+
+        #hours-minutes {
+          margin-top: 0.5rem;
+          display: none;
+        }
+
+        :host([showtime]) #hours-minutes {
+          display: flex;
         }
       </style>
 
@@ -165,6 +190,10 @@ class Calendar extends AeonElement {
           <aeon-select id="month"></aeon-select>
         </div>
         <div id="calendar"></div>
+        <div id="hours-minutes">
+          <aeon-select id="hours"></aeon-select>
+          <aeon-select id="minutes"></aeon-select>
+        </div>
       </div>
     `;
   }
@@ -184,6 +213,24 @@ class Calendar extends AeonElement {
 
     this.$.month.addEventListener('change', event => {
       this.month = event.target.value;
+    });
+
+    this.$.hours.items = [...Array(24).keys()].map((dummy, i) => ({
+      name: `${i}`.padStart(2, '0'),
+      value: i
+    }));
+
+    this.$.hours.addEventListener('change', event => {
+      this.hours = event.target.value;
+    });
+
+    this.$.minutes.items = [...Array(60).keys()].map((dummy, i) => ({
+      name: `${i}`.padStart(2, '0'),
+      value: i
+    }));
+
+    this.$.minutes.addEventListener('change', event => {
+      this.minutes = event.target.value;
     });
 
     this.$.calendar.addEventListener('click', this.onDateClick.bind(this));
@@ -213,7 +260,11 @@ class Calendar extends AeonElement {
     }
 
     if ('year' in triggers || 'month' in triggers || 'day' in triggers) {
-      this.value = this.formatAsDate(this.year, this.month, this.day);
+      this.date = this.formatAsDate(this.year, this.month, this.day);
+    }
+
+    if ('hours' in triggers || 'minutes' in triggers) {
+      this.time = this.formatAsTime(this.hours, this.minutes);
     }
 
     const now = new Date();
@@ -253,6 +304,9 @@ class Calendar extends AeonElement {
     this.days.sort(
       (a, b) => ((a.num + startdayOffset) % 7) - ((b.num + startdayOffset) % 7)
     );
+
+    this.$.hours.value = this.hours;
+    this.$.minutes.value = this.minutes;
 
     ////
 
@@ -354,7 +408,13 @@ class Calendar extends AeonElement {
       const button = event.target;
       this.day = parseInt(button.dataset.day, 10);
 
-      this.value = this.formatAsDate(this.year, this.month, this.day);
+      this.date = this.formatAsDate(this.year, this.month, this.day);
+      this.time = this.formatAsTime(this.hours, this.minutes);
+
+      this.value = {
+        date: this.date,
+        time: this.time
+      };
 
       this.dispatchEvent(
         new Event('change', {
@@ -369,6 +429,10 @@ class Calendar extends AeonElement {
       2,
       '0'
     )}`;
+  }
+
+  formatAsTime(hours, minutes) {
+    return `${`${hours}`.padStart(2, '0')}:${`${minutes}`.padStart(2, '0')}`;
   }
 }
 

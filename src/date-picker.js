@@ -3,8 +3,17 @@ import AeonElement from './aeon.js';
 class DatePicker extends AeonElement {
   static get props() {
     return {
-      value: {
+      date: {
         type: String
+      },
+      time: {
+        type: String
+      },
+      value: {
+        type: Object
+      },
+      showtime: {
+        type: Boolean
       },
       locale: {
         type: String
@@ -24,6 +33,9 @@ class DatePicker extends AeonElement {
       defaultdate: {
         type: String
       },
+      defaulttime: {
+        type: String
+      },
       usenative: {
         type: Boolean
       }
@@ -35,6 +47,7 @@ class DatePicker extends AeonElement {
 
     const now = new Date();
 
+    this.showtime = false;
     this.datestyle = 'short';
     this.startyear = now.getFullYear() - 100;
     this.endyear = now.getFullYear() + 5;
@@ -115,25 +128,28 @@ class DatePicker extends AeonElement {
   firstRendered(_) {
     const slot = _.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      this._dateInput = slot.assignedNodes().find(el => el.tagName);
+      this._dateInput = slot.assignedNodes().find(el => el.type === 'date');
+
       if (this._dateInput) {
-        this._dateInput.addEventListener(
-          'change',
-          this.onInputChange.bind(this)
-        );
-        this._dateOutput.placeholder = this._dateInput.placeholder;
-        this.value = this._dateInput.value;
+        this._output.placeholder = this._dateInput.placeholder;
+        this.date = this._dateInput.value;
+      }
+
+      this._timeInput = slot.assignedNodes().find(el => el.type === 'time');
+
+      if (this._timeInput) {
+        this.showtime = true;
+        this.time = this._timeInput.value;
       }
     });
 
-    this._dateOutput = document.createElement('input');
-    this._dateOutput.slot = 'output';
-    this._dateOutput.readOnly = true;
-    this._dateOutput.placeholder = this.getAttribute('placeholder') || '';
-    this._dateOutput.addEventListener('click', () => {
+    this._output = document.createElement('input');
+    this._output.slot = 'output';
+    this._output.readOnly = true;
+    this._output.addEventListener('click', () => {
       this.$.calendar.open = true;
     });
-    this.appendChild(this._dateOutput);
+    this.appendChild(this._output);
 
     this.addEventListener('keyup', event => {
       switch (event.key) {
@@ -146,17 +162,18 @@ class DatePicker extends AeonElement {
     });
 
     this.$.calendar.addEventListener('change', event => {
-      this.value = event.target.value;
+      this.date = event.target.value.date;
+      this.time = event.target.value.time;
       this.$.calendar.open = false;
     });
 
-    this.$.calendar.addEventListener('clear', event => {
-      this.value = '';
+    this.$.calendar.addEventListener('clear', () => {
+      this.date = '';
     });
 
-    this.$.calendar.addEventListener('close', event => {
+    this.$.calendar.addEventListener('close', () => {
       if (!this._dontFocus) {
-        this._dateOutput.focus();
+        this._output.focus();
       }
 
       this._dontFocus = false;
@@ -164,8 +181,13 @@ class DatePicker extends AeonElement {
   }
 
   render(_, triggers) {
-    if ('value' in triggers) {
-      this.updateFromString(this.value);
+    if ('date' in triggers || 'time' in triggers) {
+      this.value = {
+        date: this.date,
+        time: this.time
+      };
+
+      this.updateFromString(this.date, this.time);
 
       this.dispatchEvent(
         new Event('change', {
@@ -178,9 +200,10 @@ class DatePicker extends AeonElement {
       'locale' in triggers ||
       'startyear' in triggers ||
       'endyear' in triggers ||
-      'startday' in triggers
+      'startday' in triggers ||
+      'showtime' in triggers
     ) {
-      this.updateFromString(this.value);
+      this.updateFromString(this.date, this.time);
     }
   }
 
@@ -189,52 +212,72 @@ class DatePicker extends AeonElement {
     let showDate = date;
 
     if (!validDate) {
-      const defaultdate = this.getAttribute('defaultdate');
-      showDate = defaultdate ? new Date(defaultdate) : new Date();
+      const defaultdate = this.defaultdate;
+      const defaulttime = this.defaulttime || '00:00';
+      showDate = defaultdate
+        ? new Date(`${defaultdate} ${defaulttime}`)
+        : new Date();
     }
 
     const cal = this.$.calendar;
     cal.year = showDate.getFullYear();
     cal.month = showDate.getMonth();
     cal.day = showDate.getDate();
+    cal.hours = showDate.getHours();
+    cal.minutes = showDate.getMinutes();
     cal.locale = this.locale;
     cal.startyear = this.startyear;
     cal.endyear = this.endyear;
     cal.startday = this.startday;
+    cal.showtime = this.showtime;
 
     if (validDate) {
-      const dateString = new Intl.DateTimeFormat(this._locale, {
-        datestyle: this._datestyle
+      const dateString = new Intl.DateTimeFormat(this.locale, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        ...(this.showtime
+          ? {
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric'
+            }
+          : {}),
+        ...this._datestyle
       }).format(date);
 
-      this._dateOutput.value = dateString;
+      this._output.value = dateString;
       if (this._dateInput) {
-        this._dateInput.value = this.value;
+        this._dateInput.value = this.date;
+      }
+      if (this._timeInput) {
+        this._timeInput.value = this.time;
       }
     } else {
-      this._dateOutput.value = '';
+      this._output.value = '';
       if (this._dateInput) {
         this._dateInput.value = '';
+      }
+      if (this._timeInput) {
+        this._timeInput.value = '';
       }
     }
   }
 
-  updateFromString(value) {
-    this.update(new Date(value));
-  }
-
-  onInputChange(event) {
-    this.value = event.target.value;
+  updateFromString(date, time = '00:00') {
+    this.update(new Date(`${date} ${time}`));
   }
 
   onClickOutside(event) {
-    const outsideComponent = !event
-      .composedPath()
-      .some(element => element === this);
+    if (this.$.calendar.open) {
+      const outsideComponent = !event
+        .composedPath()
+        .some(element => element === this);
 
-    if (outsideComponent) {
-      this.$.calendar.open = false;
-      this._dontFocus = true;
+      if (outsideComponent) {
+        this.$.calendar.open = false;
+        this._dontFocus = true;
+      }
     }
   }
 }
