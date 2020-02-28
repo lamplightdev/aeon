@@ -15,6 +15,9 @@ class DatePicker extends AeonElement {
       showtime: {
         type: Boolean
       },
+      confirmondate: {
+        type: Boolean
+      },
       locale: {
         type: String
       },
@@ -48,6 +51,7 @@ class DatePicker extends AeonElement {
     const now = new Date();
 
     this.showtime = false;
+    this.confirmondate = false;
     this.datestyle = 'short';
     this.startyear = now.getFullYear() - 100;
     this.endyear = now.getFullYear() + 5;
@@ -201,7 +205,8 @@ class DatePicker extends AeonElement {
       'startyear' in triggers ||
       'endyear' in triggers ||
       'startday' in triggers ||
-      'showtime' in triggers
+      'showtime' in triggers ||
+      'confirmondate' in triggers
     ) {
       this.updateFromString(this.date, this.time);
     }
@@ -230,6 +235,7 @@ class DatePicker extends AeonElement {
     cal.endyear = this.endyear;
     cal.startday = this.startday;
     cal.showtime = this.showtime;
+    cal.confirmondate = this.confirmondate;
 
     if (validDate) {
       const dateString = new Intl.DateTimeFormat(this.locale, {

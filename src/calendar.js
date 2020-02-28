@@ -15,6 +15,9 @@ class Calendar extends AeonElement {
       showtime: {
         type: Boolean
       },
+      confirmondate: {
+        type: Boolean
+      },
       locale: {
         type: String
       },
@@ -54,7 +57,8 @@ class Calendar extends AeonElement {
   constructor() {
     super();
 
-    this.showTime = false;
+    this.showtime = false;
+    this.confirmondate = false;
     this.days = [];
     this.open = false;
   }
@@ -86,15 +90,6 @@ class Calendar extends AeonElement {
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-        aeon-select {
-          width: 50%;
-          position: relative;
-        }
-
-        aeon-select + aeon-select {
-          margin-left: 1rem;
         }
 
         .day, .date, button {
@@ -155,6 +150,11 @@ class Calendar extends AeonElement {
           width: 100%;
           display: flex;
           justify-content: space-between;
+          margin-top: 0.5em;
+        }
+
+        :host([confirmondate]:not([showtime])) #confirm {
+          display: none;
         }
 
         #year-month, #hours-minutes {
@@ -162,9 +162,22 @@ class Calendar extends AeonElement {
           width: 100%;
         }
 
+        #year-month aeon-select {
+          width: 50%;
+        }
+
+        aeon-select + aeon-select {
+          margin-left: 1rem;
+        }
+
         #hours-minutes {
-          margin-top: 0.5rem;
+          margin-top: 1rem;
           display: none;
+          justify-content: center;
+        }
+
+        #hours-minutes aeon-select {
+          width: 3.5rem;
         }
 
         :host([showtime]) #hours-minutes {
@@ -173,7 +186,21 @@ class Calendar extends AeonElement {
       </style>
 
       <div>
+        <div id="year-month">
+          <aeon-select id="year"></aeon-select>
+          <aeon-select id="month"></aeon-select>
+        </div>
+        <div id="calendar"></div>
+        <div id="hours-minutes">
+          <aeon-select id="hours"></aeon-select>
+          <aeon-select id="minutes"></aeon-select>
+        </div>
         <div id="buttons">
+          <button id="confirm" title="Confirm">
+            <svg width="24" height="24">
+              <g><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></g>
+            </svg>
+          </button>
           <button id="cancel" title="Cancel">
             <svg width="24" height="24">
               <g><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></g>
@@ -184,15 +211,6 @@ class Calendar extends AeonElement {
               <g><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g>
             </svg>
           </button>
-        </div>
-        <div id="year-month">
-          <aeon-select id="year"></aeon-select>
-          <aeon-select id="month"></aeon-select>
-        </div>
-        <div id="calendar"></div>
-        <div id="hours-minutes">
-          <aeon-select id="hours"></aeon-select>
-          <aeon-select id="minutes"></aeon-select>
         </div>
       </div>
     `;
@@ -237,6 +255,10 @@ class Calendar extends AeonElement {
 
     this.$.cancel.addEventListener('click', () => {
       this.open = false;
+    });
+
+    this.$.confirm.addEventListener('click', () => {
+      this.confirm();
     });
 
     this.$.clear.addEventListener('click', () => {
@@ -385,6 +407,22 @@ class Calendar extends AeonElement {
     }
   }
 
+  confirm() {
+    this.date = this.formatAsDate(this.year, this.month, this.day);
+    this.time = this.formatAsTime(this.hours, this.minutes);
+
+    this.value = {
+      date: this.date,
+      time: this.time
+    };
+
+    this.dispatchEvent(
+      new Event('change', {
+        bubbles: true
+      })
+    );
+  }
+
   onKeyDown(event) {
     const isTabPressed = event.key === 'Tab';
 
@@ -408,19 +446,9 @@ class Calendar extends AeonElement {
       const button = event.target;
       this.day = parseInt(button.dataset.day, 10);
 
-      this.date = this.formatAsDate(this.year, this.month, this.day);
-      this.time = this.formatAsTime(this.hours, this.minutes);
-
-      this.value = {
-        date: this.date,
-        time: this.time
-      };
-
-      this.dispatchEvent(
-        new Event('change', {
-          bubbles: true
-        })
-      );
+      if (this.confirmondate && !this.showtime) {
+        this.confirm();
+      }
     }
   }
 
