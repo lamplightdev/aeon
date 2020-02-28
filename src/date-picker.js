@@ -249,8 +249,7 @@ class DatePicker extends AeonElement {
         ...(this.showtime
           ? {
               hour: 'numeric',
-              minute: 'numeric',
-              second: 'numeric'
+              minute: 'numeric'
             }
           : {}),
         ...this._datestyle
@@ -281,7 +280,7 @@ class DatePicker extends AeonElement {
 
       return new Date(
         dateParts[0],
-        dateParts[1] - 1,
+        parseInt(dateParts[1], 10) - 1,
         dateParts[2],
         timeParts[0],
         timeParts[1]

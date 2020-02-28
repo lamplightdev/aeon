@@ -69,8 +69,6 @@ class AeonElement extends HTMLElement {
     if (!this._renderPromise) {
       this._renderPromise = Promise.resolve().then(() => {
         this._render();
-        // this._renderPromise = null;
-        // this._triggers = {};
       });
     }
   }
@@ -84,20 +82,20 @@ class AeonElement extends HTMLElement {
       return;
     }
 
-    if (first) {
-      this.firstRender(this._, this._triggers);
-
-      this.$ = [...this._.querySelectorAll('[id]')].reduce((all, el) => {
-        return {
-          ...all,
-          [el.id]: el
-        };
-      }, {});
-
-      this.firstRendered(this._, this._triggers);
-    }
-
     this._renderPromise = Promise.resolve().then(() => {
+      if (first) {
+        this.firstRender(this._, this._triggers);
+
+        this.$ = [...this._.querySelectorAll('[id]')].reduce((all, el) => {
+          return {
+            ...all,
+            [el.id]: el
+          };
+        }, {});
+
+        this.firstRendered(this._, this._triggers);
+      }
+
       this.render(this._, this._triggers);
       this.rendered(this._, this._triggers);
 
@@ -187,15 +185,6 @@ class AeonElement extends HTMLElement {
     if (this[name] !== propertyValue) {
       this[name] = propertyValue;
     }
-  }
-
-  emit(eventName, detail = {}, options = { bubbles: true, composed: true }) {
-    this.dispatchEvent(
-      new CustomEvent(eventName, {
-        ...options,
-        ...detail
-      })
-    );
   }
 }
 
