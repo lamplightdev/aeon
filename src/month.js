@@ -26,6 +26,7 @@ class Month extends AeonElement {
           -moz-appearance: none;
           padding: 0.5rem;
           padding-right: 1.5rem;
+          font-family: inherit;
           font-size: 0.8rem;
           border-radius: 0;
           border-color: var(--hintColor);

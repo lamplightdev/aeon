@@ -3,6 +3,18 @@ import AeonElement from './aeon.js';
 class Calendar extends AeonElement {
   static get props() {
     return {
+      locale: {
+        type: String
+      },
+      startyear: {
+        type: String
+      },
+      endyear: {
+        type: String
+      },
+      startday: {
+        type: String
+      },
       value: {
         type: String
       },
@@ -35,11 +47,6 @@ class Calendar extends AeonElement {
     super.connectedCallback();
 
     this.addEventListener('keydown', this.onKeyDown.bind(this));
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    document.removeEventListener('click', this.onClickOutside);
   }
 
   firstRender(_) {
@@ -140,23 +147,25 @@ class Calendar extends AeonElement {
         }
       </style>
 
-      <div id="buttons">
-        <button id="cancel" title="Cancel">
-          <svg width="24" height="24">
-            <g><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></g>
-          </svg>
-        </button>
-        <button id="clear" title='Clear'>
-          <svg width="24" height="24">
-            <g><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g>
-          </svg>
-        </button>
+      <div>
+        <div id="buttons">
+          <button id="cancel" title="Cancel">
+            <svg width="24" height="24">
+              <g><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></g>
+            </svg>
+          </button>
+          <button id="clear" title='Clear'>
+            <svg width="24" height="24">
+              <g><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g>
+            </svg>
+          </button>
+        </div>
+        <div id="year-month">
+          <aeon-year id="year"></aeon-year>
+          <aeon-month id="month"></aeon-month>
+        </div>
+        <div id="calendar"></div>
       </div>
-      <div id="year-month">
-        <aeon-year id="year"></aeon-year>
-        <aeon-month id="month"></aeon-month>
-      </div>
-      <div id="calendar"></div>
     `;
   }
 
@@ -184,29 +193,36 @@ class Calendar extends AeonElement {
     });
 
     this.$.clear.addEventListener('click', () => {
-      this.open = true;
+      this.dispatchEvent(
+        new Event('clear', {
+          bubbles: true
+        })
+      );
+      this.open = false;
     });
   }
 
   render(_, triggers) {
-    if ('year' in triggers || 'month' in triggers || 'day' in triggers) {
-      this.value = this.formatAsDate(this.year, this.month, this.day);
-    }
-
-    if ('value' in triggers) {
+    console.log('render');
+    if ('open' in triggers && this.open === false && triggers.open === true) {
       this.dispatchEvent(
-        new Event('change', {
+        new Event('close', {
           bubbles: true
         })
       );
     }
 
+    if ('year' in triggers || 'month' in triggers || 'day' in triggers) {
+      this.value = this.formatAsDate(this.year, this.month, this.day);
+    }
+
     const now = new Date();
-    now.setMonth(0, 1);
+    now.setMonth(0); // not now.setMonth(0, 1) as this can cause issues - see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/setMonth#Description
+    now.setDate(1);
 
     this.$.year.value = this.year;
     this.$.year.years = [];
-    for (let i = this.startYear; i <= this.endYear; i++) {
+    for (let i = this.startyear; i <= this.endyear; i++) {
       this.$.year.years.push(i);
     }
 
@@ -216,25 +232,26 @@ class Calendar extends AeonElement {
       let monthNum = now.getMonth();
       this.$.month.months.push({
         num: monthNum,
-        name: now.toLocaleString(this._locale, { month: 'short' })
+        name: now.toLocaleString(this.locale, { month: 'short' })
       });
       now.setMonth(i + 1);
     }
     this.$.month.months.sort((a, b) => a.num - b.num);
 
-    now.setDate(0, 1);
+    now.setMonth(0);
+    now.setDate(1);
     this.days = [];
     for (let i = 0; i < 7; i++) {
       let dayNum = now.getDay();
       this.days.push({
         num: dayNum,
-        name: now.toLocaleString(this._locale, { weekday: 'short' })
+        name: now.toLocaleString(this.locale, { weekday: 'short' })
       });
       now.setDate(i + 2);
     }
-    const startDayOffset = 7 - this.startDay;
+    const startdayOffset = 7 - this.startday;
     this.days.sort(
-      (a, b) => ((a.num + startDayOffset) % 7) - ((b.num + startDayOffset) % 7)
+      (a, b) => ((a.num + startdayOffset) % 7) - ((b.num + startdayOffset) % 7)
     );
 
     ////
@@ -259,7 +276,7 @@ class Calendar extends AeonElement {
 
       ${[0, 1, 2, 3, 4, 5]
         .map(() => {
-          if (count > daysInMonth) return null;
+          if (count >= daysInMonth) return null;
 
           return `
           <div class="week">
@@ -298,11 +315,20 @@ class Calendar extends AeonElement {
         .join('')}
     `;
 
-    const focusableEls = this.shadowRoot.querySelectorAll(
-      'button:not([disabled]), select'
-    );
+    const focusableEls = _.querySelectorAll('button:not([disabled]), select');
     this._firstFocusableEl = focusableEls[0];
     this._lastFocusableEl = focusableEls[focusableEls.length - 1];
+  }
+
+  rendered(_, triggers) {
+    if (this.open === true) {
+      if (
+        ('open' in triggers && triggers.open === false) ||
+        'day' in triggers
+      ) {
+        _.querySelector('.today').focus();
+      }
+    }
   }
 
   onKeyDown(event) {
@@ -329,6 +355,12 @@ class Calendar extends AeonElement {
       this.day = parseInt(button.dataset.day, 10);
 
       this.value = this.formatAsDate(this.year, this.month, this.day);
+
+      this.dispatchEvent(
+        new Event('change', {
+          bubbles: true
+        })
+      );
     }
   }
 

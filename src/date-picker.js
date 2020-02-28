@@ -3,14 +3,30 @@ import AeonElement from './aeon.js';
 class DatePicker extends AeonElement {
   static get props() {
     return {
-      value: {},
-      locale: {},
-      dateStyle: {},
-      startYear: {},
-      endYear: {},
-      startDay: {},
-      defaultDate: {},
-      useNative: {}
+      value: {
+        type: String
+      },
+      locale: {
+        type: String
+      },
+      datestyle: {
+        type: String
+      },
+      startyear: {
+        type: String
+      },
+      endyear: {
+        type: String
+      },
+      startday: {
+        type: String
+      },
+      defaultdate: {
+        type: String
+      },
+      usenative: {
+        type: Boolean
+      }
     };
   }
 
@@ -19,10 +35,10 @@ class DatePicker extends AeonElement {
 
     const now = new Date();
 
-    this.dateStyle = 'short';
-    this.startYear = now.getFullYear() - 100;
-    this.endYear = now.getFullYear() + 5;
-    this.startDay = 1;
+    this.datestyle = 'short';
+    this.startyear = now.getFullYear() - 100;
+    this.endyear = now.getFullYear() + 5;
+    this.startday = 1;
 
     try {
       const input = document.createElement('input');
@@ -74,6 +90,19 @@ class DatePicker extends AeonElement {
         :host(.has-native) slot:not([name]) {
           display: contents;
         }
+
+        aeon-calendar {
+          position: absolute;
+        }
+
+        @media (max-width: 640px) {
+          aeon-calendar {
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+          }
+        }
       </style>
 
       <slot></slot>
@@ -106,8 +135,31 @@ class DatePicker extends AeonElement {
     });
     this.appendChild(this._dateOutput);
 
+    this.addEventListener('keyup', event => {
+      switch (event.key) {
+        case ' ':
+          if (!this.$.calendar.open) {
+            this.$.calendar.open = true;
+          }
+          break;
+      }
+    });
+
     this.$.calendar.addEventListener('change', event => {
-      this.updateFromString(event.target.value);
+      this.value = event.target.value;
+      this.$.calendar.open = false;
+    });
+
+    this.$.calendar.addEventListener('clear', event => {
+      this.value = '';
+    });
+
+    this.$.calendar.addEventListener('close', event => {
+      if (!this._dontFocus) {
+        this._dateOutput.focus();
+      }
+
+      this._dontFocus = false;
     });
   }
 
@@ -121,6 +173,15 @@ class DatePicker extends AeonElement {
         })
       );
     }
+
+    if (
+      'locale' in triggers ||
+      'startyear' in triggers ||
+      'endyear' in triggers ||
+      'startday' in triggers
+    ) {
+      this.updateFromString(this.value);
+    }
   }
 
   update(date = null) {
@@ -128,18 +189,22 @@ class DatePicker extends AeonElement {
     let showDate = date;
 
     if (!validDate) {
-      const defaultDate = this.getAttribute('default-date');
-      showDate = defaultDate ? new Date(defaultDate) : new Date();
+      const defaultdate = this.getAttribute('defaultdate');
+      showDate = defaultdate ? new Date(defaultdate) : new Date();
     }
 
     const cal = this.$.calendar;
     cal.year = showDate.getFullYear();
     cal.month = showDate.getMonth();
     cal.day = showDate.getDate();
+    cal.locale = this.locale;
+    cal.startyear = this.startyear;
+    cal.endyear = this.endyear;
+    cal.startday = this.startday;
 
     if (validDate) {
       const dateString = new Intl.DateTimeFormat(this._locale, {
-        dateStyle: this._dateStyle
+        datestyle: this._datestyle
       }).format(date);
 
       this._dateOutput.value = dateString;
@@ -159,7 +224,7 @@ class DatePicker extends AeonElement {
   }
 
   onInputChange(event) {
-    this.updateFromString(event.target.value);
+    this.value = event.target.value;
   }
 
   onClickOutside(event) {
@@ -169,6 +234,7 @@ class DatePicker extends AeonElement {
 
     if (outsideComponent) {
       this.$.calendar.open = false;
+      this._dontFocus = true;
     }
   }
 }
