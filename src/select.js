@@ -1,12 +1,12 @@
 import AeonElement from './aeon.js';
 
-class Month extends AeonElement {
+class Select extends AeonElement {
   static get props() {
     return {
       value: {
         type: Number
       },
-      months: {
+      items: {
         type: Array
       }
     };
@@ -15,7 +15,7 @@ class Month extends AeonElement {
   constructor() {
     super();
 
-    this.months = [];
+    this.items = [];
   }
 
   firstRender(_) {
@@ -51,7 +51,7 @@ class Month extends AeonElement {
       </style>
 
       <div class="select">
-        <select id="month">
+        <select id="select">
         </select>
         <span class="indicator">
           <svg width="24" height="24">
@@ -63,7 +63,7 @@ class Month extends AeonElement {
   }
 
   firstRendered() {
-    this.$.month.addEventListener('change', event => {
+    this.$.select.addEventListener('change', event => {
       this.value = event.target.value;
     });
   }
@@ -77,12 +77,12 @@ class Month extends AeonElement {
       );
     }
 
-    this.$.month.innerHTML = this.months
-      .map(month => `<option value="${month.num}">${month.name}</option>`)
+    this.$.select.innerHTML = this.items
+      .map(item => `<option value="${item.value}">${item.name}</option>`)
       .join('');
 
-    this.$.month.value = this.value;
+    this.$.select.value = this.value;
   }
 }
 
-export default Month;
+export default Select;

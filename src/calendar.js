@@ -72,12 +72,12 @@ class Calendar extends AeonElement {
           justify-content: center;
         }
 
-        aeon-year, aeon-month {
+        aeon-select {
           width: 50%;
           position: relative;
         }
 
-        aeon-month {
+        aeon-select + aeon-select {
           margin-left: 1rem;
         }
 
@@ -161,8 +161,8 @@ class Calendar extends AeonElement {
           </button>
         </div>
         <div id="year-month">
-          <aeon-year id="year"></aeon-year>
-          <aeon-month id="month"></aeon-month>
+          <aeon-select id="year"></aeon-select>
+          <aeon-select id="month"></aeon-select>
         </div>
         <div id="calendar"></div>
       </div>
@@ -221,22 +221,22 @@ class Calendar extends AeonElement {
     now.setDate(1);
 
     this.$.year.value = this.year;
-    this.$.year.years = [];
+    this.$.year.items = [];
     for (let i = this.startyear; i <= this.endyear; i++) {
-      this.$.year.years.push(i);
+      this.$.year.items.push({ value: i, name: i });
     }
 
     this.$.month.value = this.month;
-    this.$.month.months = [];
+    this.$.month.items = [];
     for (let i = 0; i < 12; i++) {
       let monthNum = now.getMonth();
-      this.$.month.months.push({
-        num: monthNum,
+      this.$.month.items.push({
+        value: monthNum,
         name: now.toLocaleString(this.locale, { month: 'short' })
       });
       now.setMonth(i + 1);
     }
-    this.$.month.months.sort((a, b) => a.num - b.num);
+    this.$.month.items.sort((a, b) => a.num - b.num);
 
     now.setMonth(0);
     now.setDate(1);
