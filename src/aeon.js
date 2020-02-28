@@ -139,7 +139,7 @@ class AeonElement extends HTMLElement {
 
         switch (propertyInfo.type) {
           case Boolean:
-            attributeValue = !!attributeValue;
+            attributeValue = attributeValue || attributeValue === '';
             break;
         }
 

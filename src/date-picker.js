@@ -39,6 +39,9 @@ class DatePicker extends AeonElement {
       defaulttime: {
         type: String
       },
+      hasnative: {
+        type: Boolean
+      },
       usenative: {
         type: Boolean
       }
@@ -60,9 +63,9 @@ class DatePicker extends AeonElement {
     try {
       const input = document.createElement('input');
       input.type = 'date';
-      this._hasNative = input.type === 'date';
+      this.hasnative = input.type === 'date';
     } catch (error) {
-      this._hasNative = false;
+      this.hasnative = false;
     }
 
     this.onClickOutside = this.onClickOutside.bind(this);
@@ -100,11 +103,11 @@ class DatePicker extends AeonElement {
           display: none;
         }
 
-        :host(.has-native) slot {
+        :host([hasnative][usenative]) slot {
           display: none;
         }
 
-        :host(.has-native) slot:not([name]) {
+        :host([hasnative][usenative]) slot:not([name]) {
           display: contents;
         }
 
