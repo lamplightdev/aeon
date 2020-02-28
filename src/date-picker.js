@@ -132,14 +132,17 @@ class DatePicker extends AeonElement {
   firstRendered(_) {
     const slot = _.querySelector('slot');
     slot.addEventListener('slotchange', event => {
-      this._dateInput = slot.assignedNodes().find(el => el.type === 'date');
+      const elements = slot
+        .assignedNodes()
+        .filter(el => el.nodeType != Node.TEXT_NODE);
+      this._dateInput = elements.find(el => el.getAttribute('type') === 'date');
 
       if (this._dateInput) {
         this._output.placeholder = this._dateInput.placeholder;
         this.date = this._dateInput.value;
       }
 
-      this._timeInput = slot.assignedNodes().find(el => el.type === 'time');
+      this._timeInput = elements.find(el => el.getAttribute('type') === 'time');
 
       if (this._timeInput) {
         this.showtime = true;
@@ -217,11 +220,9 @@ class DatePicker extends AeonElement {
     let showDate = date;
 
     if (!validDate) {
-      const defaultdate = this.defaultdate;
-      const defaulttime = this.defaulttime || '00:00';
-      showDate = defaultdate
-        ? new Date(`${defaultdate} ${defaulttime}`)
-        : new Date();
+      const date = this.defaultdate;
+      const time = this.defaulttime;
+      showDate = this.parseDate(date, time);
     }
 
     const cal = this.$.calendar;
@@ -270,8 +271,25 @@ class DatePicker extends AeonElement {
     }
   }
 
-  updateFromString(date, time = '00:00') {
-    this.update(new Date(`${date} ${time}`));
+  parseDate(date, time = '00:00') {
+    try {
+      const dateParts = date.split('-');
+      const timeParts = time.split(':');
+
+      return new Date(
+        dateParts[0],
+        dateParts[1] - 1,
+        dateParts[2],
+        timeParts[0],
+        timeParts[1]
+      );
+    } catch (error) {
+      return new Date();
+    }
+  }
+
+  updateFromString(date, time) {
+    this.update(this.parseDate(date, time));
   }
 
   onClickOutside(event) {
