@@ -4,9 +4,17 @@ class AeonElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return Object.keys(this.props).filter(propName => {
-      return [Boolean, Number, String].includes(this.props[propName].type);
-    });
+    return Object.keys(this.props)
+      .filter(propName => {
+        return [Boolean, Number, String].includes(this.props[propName].type);
+      })
+      .map(propName => {
+        return this.attributeName(propName);
+      });
+  }
+
+  static attributeName(propName) {
+    return propName.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
   }
 
   constructor(useShadow = true, options = {}) {
@@ -14,6 +22,14 @@ class AeonElement extends HTMLElement {
 
     this._ = this;
     this.$ = {};
+
+    this.attrToProp = {};
+    this.propToAttr = {};
+    Object.keys(this.constructor.props).forEach(name => {
+      const attrName = this.constructor.attributeName(name);
+      this.attrToProp[attrName] = name;
+      this.propToAttr[name] = attrName;
+    });
 
     if (useShadow) {
       this.attachShadow({ mode: 'open', ...options });
@@ -34,8 +50,10 @@ class AeonElement extends HTMLElement {
       this._props = {};
 
       Object.keys(this.constructor.props).forEach(propName => {
-        const initialValue = this.hasAttribute(propName)
-          ? this.getAttribute(propName)
+        const attrName = this.propToAttr[propName];
+
+        const initialValue = this.hasAttribute(attrName)
+          ? this.getAttribute(attrName)
           : initialProps[propName] !== undefined
           ? initialProps[propName]
           : this[propName];
@@ -121,6 +139,8 @@ class AeonElement extends HTMLElement {
   rendered() {}
 
   setter(propName) {
+    const attrName = this.propToAttr[propName];
+
     return value => {
       if (this._props[propName] === value) return;
 
@@ -132,7 +152,7 @@ class AeonElement extends HTMLElement {
 
       const propertyInfo = this.constructor.props[propName];
 
-      if (this.constructor.observedAttributes.includes(propName)) {
+      if (this.constructor.observedAttributes.includes(attrName)) {
         let attributeValue = value;
 
         switch (propertyInfo.type) {
@@ -143,15 +163,15 @@ class AeonElement extends HTMLElement {
 
         if (propertyInfo.type === Boolean) {
           if (attributeValue) {
-            this.setAttribute(propName, '');
+            this.setAttribute(attrName, '');
           } else {
-            this.removeAttribute(propName);
+            this.removeAttribute(attrName);
           }
-        } else if (this.getAttribute(propName) !== attributeValue) {
+        } else if (this.getAttribute(attrName) !== attributeValue) {
           if ([null, undefined].includes(attributeValue)) {
-            this.removeAttribute(propName);
+            this.removeAttribute(attrName);
           } else {
-            this.setAttribute(propName, attributeValue);
+            this.setAttribute(attrName, attributeValue);
           }
         }
       }
@@ -166,8 +186,10 @@ class AeonElement extends HTMLElement {
     return () => this._props[propName];
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    const propertyInfo = this.constructor.props[name];
+  attributeChangedCallback(attrName, oldValue, newValue) {
+    const propName = this.attrToProp[attrName];
+
+    const propertyInfo = this.constructor.props[propName];
 
     let propertyValue = newValue;
 
@@ -182,8 +204,8 @@ class AeonElement extends HTMLElement {
         break;
     }
 
-    if (this[name] !== propertyValue) {
-      this[name] = propertyValue;
+    if (this[propName] !== propertyValue) {
+      this[propName] = propertyValue;
     }
   }
 }

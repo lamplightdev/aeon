@@ -12,22 +12,22 @@ class Calendar extends AeonElement {
       value: {
         type: Object
       },
-      showtime: {
+      showTime: {
         type: Boolean
       },
-      confirmondate: {
+      confirmOnDate: {
         type: Boolean
       },
       locale: {
         type: String
       },
-      startyear: {
+      startYear: {
         type: String
       },
-      endyear: {
+      endYear: {
         type: String
       },
-      startday: {
+      startDay: {
         type: String
       },
       days: {
@@ -57,8 +57,8 @@ class Calendar extends AeonElement {
   constructor() {
     super();
 
-    this.showtime = false;
-    this.confirmondate = false;
+    this.showTime = false;
+    this.confirmOnDate = false;
     this.days = [];
     this.open = false;
   }
@@ -189,7 +189,7 @@ class Calendar extends AeonElement {
           margin-left: 0.2em;
         }
 
-        :host([showtime]) #hours-minutes {
+        :host([show-time]) #hours-minutes {
           display: flex;
         }
       </style>
@@ -303,7 +303,7 @@ class Calendar extends AeonElement {
 
     this.$.year.value = this.year;
     this.$.year.items = [];
-    for (let i = this.startyear; i <= this.endyear; i++) {
+    for (let i = this.startYear; i <= this.endYear; i++) {
       this.$.year.items.push({ value: i, name: i });
     }
 
@@ -330,9 +330,9 @@ class Calendar extends AeonElement {
       });
       now.setDate(i + 2);
     }
-    const startdayOffset = 7 - this.startday;
+    const startDayOffset = 7 - this.startDay;
     this.days.sort(
-      (a, b) => ((a.num + startdayOffset) % 7) - ((b.num + startdayOffset) % 7)
+      (a, b) => ((a.num + startDayOffset) % 7) - ((b.num + startDayOffset) % 7)
     );
 
     this.$.hours.value = this.hours;
@@ -454,7 +454,7 @@ class Calendar extends AeonElement {
       const button = event.target;
       this.day = parseInt(button.dataset.day, 10);
 
-      if (this.confirmondate && !this.showtime) {
+      if (this.confirmOnDate && !this.showTime) {
         this.confirm();
       }
     }

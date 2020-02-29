@@ -12,37 +12,37 @@ class DatePicker extends AeonElement {
       value: {
         type: Object
       },
-      showtime: {
+      showTime: {
         type: Boolean
       },
-      confirmondate: {
+      confirmOnDate: {
         type: Boolean
       },
       locale: {
         type: String
       },
-      datestyle: {
+      dateStyle: {
         type: String
       },
-      startyear: {
+      startYear: {
         type: String
       },
-      endyear: {
+      endYear: {
         type: String
       },
-      startday: {
+      startDay: {
         type: String
       },
-      defaultdate: {
+      defaultDate: {
         type: String
       },
-      defaulttime: {
+      defaultTime: {
         type: String
       },
-      hasnative: {
+      hasNative: {
         type: Boolean
       },
-      usenative: {
+      useNative: {
         type: Boolean
       }
     };
@@ -53,19 +53,19 @@ class DatePicker extends AeonElement {
 
     const now = new Date();
 
-    this.showtime = false;
-    this.confirmondate = false;
-    this.datestyle = 'short';
-    this.startyear = now.getFullYear() - 100;
-    this.endyear = now.getFullYear() + 5;
-    this.startday = 1;
+    this.showTime = false;
+    this.confirmOnDate = false;
+    this.dateStyle = 'short';
+    this.startYear = now.getFullYear() - 100;
+    this.endYear = now.getFullYear() + 5;
+    this.startDay = 1;
 
     try {
       const input = document.createElement('input');
       input.type = 'date';
-      this.hasnative = input.type === 'date';
+      this.hasNative = input.type === 'date';
     } catch (error) {
-      this.hasnative = false;
+      this.hasNative = false;
     }
 
     this.onClickOutside = this.onClickOutside.bind(this);
@@ -148,7 +148,7 @@ class DatePicker extends AeonElement {
       this._timeInput = elements.find(el => el.getAttribute('type') === 'time');
 
       if (this._timeInput) {
-        this.showtime = true;
+        this.showTime = true;
         this.time = this._timeInput.value;
       }
     });
@@ -208,11 +208,11 @@ class DatePicker extends AeonElement {
 
     if (
       'locale' in triggers ||
-      'startyear' in triggers ||
-      'endyear' in triggers ||
-      'startday' in triggers ||
-      'showtime' in triggers ||
-      'confirmondate' in triggers
+      'startYear' in triggers ||
+      'endYear' in triggers ||
+      'startDay' in triggers ||
+      'showTime' in triggers ||
+      'confirmOnDate' in triggers
     ) {
       this.updateFromString(this.date, this.time);
     }
@@ -223,8 +223,8 @@ class DatePicker extends AeonElement {
     let showDate = date;
 
     if (!validDate) {
-      const date = this.defaultdate;
-      const time = this.defaulttime;
+      const date = this.defaultDate;
+      const time = this.defaultTime;
       showDate = this.parseDate(date, time);
     }
 
@@ -235,24 +235,24 @@ class DatePicker extends AeonElement {
     cal.hours = showDate.getHours();
     cal.minutes = showDate.getMinutes();
     cal.locale = this.locale;
-    cal.startyear = this.startyear;
-    cal.endyear = this.endyear;
-    cal.startday = this.startday;
-    cal.showtime = this.showtime;
-    cal.confirmondate = this.confirmondate;
+    cal.startYear = this.startYear;
+    cal.endYear = this.endYear;
+    cal.startDay = this.startDay;
+    cal.showTime = this.showTime;
+    cal.confirmOnDate = this.confirmOnDate;
 
     if (validDate) {
       const dateString = new Intl.DateTimeFormat(this.locale, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
-        ...(this.showtime
+        ...(this.showTime
           ? {
               hour: 'numeric',
               minute: 'numeric'
             }
           : {}),
-        ...this._datestyle
+        ...this._dateStyle
       }).format(date);
 
       this._output.value = dateString;
@@ -276,7 +276,7 @@ class DatePicker extends AeonElement {
   parseDate(date, time) {
     try {
       const dateParts = date.split('-');
-      const timeParts = (time || this.defaulttime || '00:00').split(':');
+      const timeParts = (time || this.defaultTime || '00:00').split(':');
 
       return new Date(
         dateParts[0],
