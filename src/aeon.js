@@ -9,14 +9,14 @@ class AeonElement extends HTMLElement {
     });
   }
 
-  constructor(useShadow = true) {
+  constructor(useShadow = true, options = {}) {
     super();
 
     this._ = this;
     this.$ = {};
 
     if (useShadow) {
-      this.attachShadow({ mode: 'open' });
+      this.attachShadow({ mode: 'open', ...options });
       this._ = this.shadowRoot;
     }
 
@@ -142,9 +142,9 @@ class AeonElement extends HTMLElement {
         }
 
         if (propertyInfo.type === Boolean) {
-          if (attributeValue && !this.hasAttribute(propName)) {
+          if (attributeValue) {
             this.setAttribute(propName, '');
-          } else if (!attributeValue) {
+          } else {
             this.removeAttribute(propName);
           }
         } else if (this.getAttribute(propName) !== attributeValue) {

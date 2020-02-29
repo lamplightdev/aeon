@@ -151,10 +151,7 @@ class Calendar extends AeonElement {
           display: flex;
           justify-content: space-between;
           margin-top: 0.5em;
-        }
-
-        :host([confirmondate]:not([showtime])) #confirm {
-          display: none;
+          border-top: 1px solid var(--hintColor);
         }
 
         #year-month, #hours-minutes {
@@ -167,11 +164,13 @@ class Calendar extends AeonElement {
         }
 
         aeon-select + aeon-select {
-          margin-left: 1rem;
+          margin-left: 0.5rem;
         }
 
         #hours-minutes {
-          margin-top: 1rem;
+          padding-top: 0.5em;
+          margin-top: 0.5em;
+          border-top: 1px solid var(--hintColor);
           display: none;
           justify-content: center;
         }
@@ -391,7 +390,9 @@ class Calendar extends AeonElement {
         .join('')}
     `;
 
-    const focusableEls = _.querySelectorAll('button:not([disabled]), select');
+    const focusableEls = _.querySelectorAll(
+      'button:not([disabled]), aeon-select'
+    );
     this._firstFocusableEl = focusableEls[0];
     this._lastFocusableEl = focusableEls[focusableEls.length - 1];
   }
@@ -424,9 +425,7 @@ class Calendar extends AeonElement {
   }
 
   onKeyDown(event) {
-    const isTabPressed = event.key === 'Tab';
-
-    if (!isTabPressed) {
+    if (event.key !== 'Tab') {
       return;
     }
 

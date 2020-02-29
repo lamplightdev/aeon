@@ -273,10 +273,10 @@ class DatePicker extends AeonElement {
     }
   }
 
-  parseDate(date, time = '00:00') {
+  parseDate(date, time) {
     try {
       const dateParts = date.split('-');
-      const timeParts = time.split(':');
+      const timeParts = (time || this.defaulttime || '00:00').split(':');
 
       return new Date(
         dateParts[0],

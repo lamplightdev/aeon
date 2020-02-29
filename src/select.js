@@ -13,7 +13,9 @@ class Select extends AeonElement {
   }
 
   constructor() {
-    super();
+    super(true, {
+      // delegatesFocus: true
+    });
 
     this.items = [];
   }
@@ -29,7 +31,7 @@ class Select extends AeonElement {
           font-family: inherit;
           font-size: 0.8rem;
           border-radius: 0;
-          border-color: var(--hintColor);
+          border: 1px solid var(--hintColor);
           background-color: transparent;
           color: var(--color);
           width: 100%;
@@ -62,7 +64,13 @@ class Select extends AeonElement {
     `;
   }
 
-  firstRendered() {
+  // simulate focus event which doesn't exist as `this` doesn't have (not do
+  // we want it to have) a tabIndex
+  focus() {
+    this.$.select.focus();
+  }
+
+  firstRendered(_) {
     this.$.select.addEventListener('change', event => {
       this.value = event.target.value;
     });
