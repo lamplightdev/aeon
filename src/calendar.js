@@ -100,6 +100,7 @@ class Calendar extends AeonElement {
           width: 2.4rem;
           height: 2.4rem;
           padding: 0;
+          font-family: inherit;
           font-size: calc(2.4rem / 3);
 
           text-transform: uppercase;
@@ -163,7 +164,7 @@ class Calendar extends AeonElement {
           width: 50%;
         }
 
-        aeon-select + aeon-select {
+        #year-month aeon-select + aeon-select {
           margin-left: 0.5rem;
         }
 
@@ -173,10 +174,19 @@ class Calendar extends AeonElement {
           border-top: 1px solid var(--hintColor);
           display: none;
           justify-content: center;
+          align-items: center;
         }
 
         #hours-minutes aeon-select {
           width: 3.5rem;
+        }
+
+        #hours-minutes aeon-select#hours {
+          margin-right: 0.2em;
+        }
+
+        #hours-minutes aeon-select#minutes {
+          margin-left: 0.2em;
         }
 
         :host([showtime]) #hours-minutes {
@@ -191,8 +201,7 @@ class Calendar extends AeonElement {
         </div>
         <div id="calendar"></div>
         <div id="hours-minutes">
-          <aeon-select id="hours"></aeon-select>
-          <aeon-select id="minutes"></aeon-select>
+          <aeon-select id="hours"></aeon-select>:<aeon-select id="minutes"></aeon-select>
         </div>
         <div id="buttons">
           <button id="confirm" title="Confirm">
@@ -207,7 +216,7 @@ class Calendar extends AeonElement {
           </button>
           <button id="clear" title='Clear'>
             <svg width="24" height="24">
-              <g><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></g>
+              <g><path fill="currentColor" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"></path></g>
             </svg>
           </button>
         </div>

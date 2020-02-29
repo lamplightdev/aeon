@@ -29,7 +29,7 @@ class Select extends AeonElement {
           padding: 0.5rem;
           padding-right: 1.5rem;
           font-family: inherit;
-          font-size: 0.8rem;
+          font-size: inherit;
           border-radius: 0;
           border: 1px solid var(--hintColor);
           background-color: transparent;
