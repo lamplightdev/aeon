@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "A Date Picker Web Component",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "start-storybook"
   },
   "repository": {
     "type": "git",
@@ -16,6 +17,10 @@
   },
   "homepage": "https://github.com/lamplightdev/aeon#readme",
   "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@storybook/addon-knobs": "^5.3.14",
+    "@storybook/html": "^5.3.14",
+    "babel-loader": "^8.0.6",
     "rollup": "^1.32.0",
     "rollup-plugin-terser": "^5.2.0"
   }
