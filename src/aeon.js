@@ -152,26 +152,23 @@ class AeonElement extends HTMLElement {
 
       const propertyInfo = this.constructor.props[propName];
 
-      if (this.constructor.observedAttributes.includes(attrName)) {
-        let attributeValue = value;
+      if ([Boolean, String, Number].includes(propertyInfo.type)) {
+        if (this.constructor.observedAttributes.includes(attrName)) {
+          let attributeValue = value;
 
-        switch (propertyInfo.type) {
-          case Boolean:
+          if (propertyInfo.type === Boolean) {
             attributeValue = attributeValue || attributeValue === '';
-            break;
-        }
-
-        if (propertyInfo.type === Boolean) {
-          if (attributeValue) {
-            this.setAttribute(attrName, '');
-          } else {
-            this.removeAttribute(attrName);
-          }
-        } else if (this.getAttribute(attrName) !== attributeValue) {
-          if ([null, undefined].includes(attributeValue)) {
-            this.removeAttribute(attrName);
-          } else {
-            this.setAttribute(attrName, attributeValue);
+            if (attributeValue) {
+              this.setAttribute(attrName, '');
+            } else {
+              this.removeAttribute(attrName);
+            }
+          } else if (this.getAttribute(attrName) !== attributeValue) {
+            if ([null, undefined].includes(attributeValue)) {
+              this.removeAttribute(attrName);
+            } else {
+              this.setAttribute(attrName, attributeValue);
+            }
           }
         }
       }

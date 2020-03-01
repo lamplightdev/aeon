@@ -22,7 +22,7 @@ class DatePicker extends AeonElement {
         type: String
       },
       dateStyle: {
-        type: String
+        type: Object
       },
       startYear: {
         type: String
@@ -55,7 +55,7 @@ class DatePicker extends AeonElement {
 
     this.showTime = false;
     this.confirmOnDate = false;
-    this.dateStyle = 'short';
+    this.dateStyle = {};
     this.startYear = now.getFullYear() - 100;
     this.endYear = now.getFullYear() + 5;
     this.startDay = 1;
@@ -103,11 +103,11 @@ class DatePicker extends AeonElement {
           display: none;
         }
 
-        :host([hasnative][usenative]) slot {
+        :host([has-native][use-native]) slot {
           display: none;
         }
 
-        :host([hasnative][usenative]) slot:not([name]) {
+        :host([has-native][use-native]) slot:not([name]) {
           display: contents;
         }
 
@@ -242,7 +242,7 @@ class DatePicker extends AeonElement {
     cal.confirmOnDate = this.confirmOnDate;
 
     if (validDate) {
-      const dateString = new Intl.DateTimeFormat(this.locale, {
+      const dateString = new Intl.DateTimeFormat(this.locale || undefined, {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
@@ -252,7 +252,7 @@ class DatePicker extends AeonElement {
               minute: 'numeric'
             }
           : {}),
-        ...this._dateStyle
+        ...this.dateStyle
       }).format(date);
 
       this._output.value = dateString;

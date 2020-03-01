@@ -313,7 +313,7 @@ class Calendar extends AeonElement {
       let monthNum = now.getMonth();
       this.$.month.items.push({
         value: monthNum,
-        name: now.toLocaleString(this.locale, { month: 'short' })
+        name: now.toLocaleString(this.locale || undefined, { month: 'short' })
       });
       now.setMonth(i + 1);
     }
@@ -326,7 +326,7 @@ class Calendar extends AeonElement {
       let dayNum = now.getDay();
       this.days.push({
         num: dayNum,
-        name: now.toLocaleString(this.locale, { weekday: 'short' })
+        name: now.toLocaleString(this.locale || undefined, { weekday: 'short' })
       });
       now.setDate(i + 2);
     }
