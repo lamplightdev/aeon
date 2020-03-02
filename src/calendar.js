@@ -1,6 +1,6 @@
-import AeonElement from './aeon.js';
+import BaseElement from './base.js';
 
-class Calendar extends AeonElement {
+class Calendar extends BaseElement {
   static get props() {
     return {
       date: {
@@ -280,7 +280,6 @@ class Calendar extends AeonElement {
   }
 
   render(_, triggers) {
-    console.log('render');
     if ('open' in triggers && this.open === false && triggers.open === true) {
       this.dispatchEvent(
         new Event('close', {

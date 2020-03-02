@@ -1,6 +1,6 @@
-import AeonElement from './aeon.js';
+import BaseElement from './base.js';
 
-class DatePicker extends AeonElement {
+class DatePicker extends BaseElement {
   static get props() {
     return {
       date: {

@@ -1,9 +1,9 @@
 import { terser } from 'rollup-plugin-terser';
 
 export default {
-  input: ['src/app.js'],
+  input: ['src/aeon.js'],
   output: {
-    dir: 'lib/',
+    dir: 'dist/',
     format: 'esm',
     sourcemap: true
   },

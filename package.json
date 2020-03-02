@@ -1,9 +1,10 @@
 {
-  "name": "aeon",
+  "name": "@lamplightdev/aeon",
   "version": "0.0.1",
-  "description": "A Date Picker Web Component",
+  "description": "A date time picker web component",
+  "module": "src/aeon.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx rollup -c",
     "storybook": "start-storybook"
   },
   "repository": {

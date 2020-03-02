@@ -1,6 +1,6 @@
-import AeonElement from './aeon.js';
+import BaseElement from './base.js';
 
-class Select extends AeonElement {
+class Select extends BaseElement {
   static get props() {
     return {
       value: {
