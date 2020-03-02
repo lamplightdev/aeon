@@ -8,7 +8,7 @@ import {
 } from '@storybook/addon-knobs';
 
 import './styles.css';
-import '../src/app.js';
+import '../src/aeon.js';
 
 export default { title: 'DatePicker', decorators: [withKnobs] };
 
