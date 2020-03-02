@@ -45,7 +45,7 @@ class DatePicker extends AeonElement {
       useNative: {
         type: Boolean
       },
-      showAbove: {
+      alignTop: {
         type: Boolean
       },
       alignRight: {
@@ -61,7 +61,7 @@ class DatePicker extends AeonElement {
 
     this.showTime = false;
     this.confirmOnDate = false;
-    this.showAbove = false;
+    this.alignTop = false;
     this.alignRight = false;
     this.dateStyle = {};
     this.startYear = now.getFullYear() - 100;
@@ -131,7 +131,7 @@ class DatePicker extends AeonElement {
           left: 0;
         }
 
-        :host([show-above]) aeon-calendar {
+        :host([align-top]) aeon-calendar {
           top: auto;
           bottom: 100%;
         }
@@ -143,7 +143,8 @@ class DatePicker extends AeonElement {
 
         @media (max-width: 640px) {
           aeon-calendar,
-          :host([show-above]) aeon-calendar {
+          :host([align-top]) aeon-calendar,
+          :host([align-right]) aeon-calendar {
             position: fixed;
             top: 0;
             left: 0;
@@ -311,7 +312,7 @@ class DatePicker extends AeonElement {
     const fromLeft = rect.left;
     const fromRight = window.innerWidth - rect.right;
 
-    this.showAbove = fromBottom < fromTop;
+    this.alignTop = fromBottom < fromTop;
     this.alignRight = fromRight < fromLeft;
 
     this.$.calendar.open = true;
