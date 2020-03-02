@@ -68,6 +68,7 @@ class DatePicker extends AeonElement {
       this.hasNative = false;
     }
 
+    this.onLabelClick = this.onLabelClick.bind(this);
     this.onClickOutside = this.onClickOutside.bind(this);
   }
 
@@ -80,6 +81,11 @@ class DatePicker extends AeonElement {
   disconnectedCallback() {
     super.disconnectedCallback();
 
+    if (this._dateInput) {
+      [...this._dateInput.labels].forEach(labelEl => {
+        labelEl.removeEventListener('click', this.onLabelClick);
+      });
+    }
     document.removeEventListener('click', this.onClickOutside);
   }
 
@@ -142,6 +148,9 @@ class DatePicker extends AeonElement {
 
       if (this._dateInput) {
         this._output.placeholder = this._dateInput.placeholder;
+        [...this._dateInput.labels].forEach(labelEl => {
+          labelEl.addEventListener('click', this.onLabelClick);
+        });
         this.date = this._dateInput.value;
       }
 
@@ -292,6 +301,13 @@ class DatePicker extends AeonElement {
 
   updateFromString(date, time) {
     this.update(this.parseDate(date, time));
+  }
+
+  onLabelClick(event) {
+    if (!this.useNative || !this.hasNative) {
+      event.preventDefault();
+      this._output.focus();
+    }
   }
 
   onClickOutside(event) {

@@ -13,9 +13,7 @@ class Select extends AeonElement {
   }
 
   constructor() {
-    super(true, {
-      // delegatesFocus: true
-    });
+    super();
 
     this.items = [];
   }
