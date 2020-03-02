@@ -44,6 +44,12 @@ class DatePicker extends AeonElement {
       },
       useNative: {
         type: Boolean
+      },
+      showAbove: {
+        type: Boolean
+      },
+      alignRight: {
+        type: Boolean
       }
     };
   }
@@ -55,6 +61,8 @@ class DatePicker extends AeonElement {
 
     this.showTime = false;
     this.confirmOnDate = false;
+    this.showAbove = false;
+    this.alignRight = false;
     this.dateStyle = {};
     this.startYear = now.getFullYear() - 100;
     this.endYear = now.getFullYear() + 5;
@@ -94,7 +102,7 @@ class DatePicker extends AeonElement {
       <style>
         :host {
           position: relative;
-          display: contents;
+          display: inline;
 
           --rgb: var(--cal-rgb, 0, 0, 0);
           --bgRgb: var(--cal-bg-rgb, 248, 248, 248);
@@ -119,10 +127,24 @@ class DatePicker extends AeonElement {
 
         aeon-calendar {
           position: absolute;
+          top: 100%;
+          left: 0;
+        }
+
+        :host([show-above]) aeon-calendar {
+          top: auto;
+          bottom: 100%;
+        }
+
+        :host([align-right]) aeon-calendar {
+          left: auto;
+          right: 0;
         }
 
         @media (max-width: 640px) {
-          aeon-calendar {
+          aeon-calendar,
+          :host([show-above]) aeon-calendar {
+            position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
@@ -166,7 +188,7 @@ class DatePicker extends AeonElement {
     this._output.slot = 'output';
     this._output.readOnly = true;
     this._output.addEventListener('click', () => {
-      this.$.calendar.open = true;
+      this.openCalendar();
     });
     this.appendChild(this._output);
 
@@ -174,7 +196,7 @@ class DatePicker extends AeonElement {
       switch (event.key) {
         case ' ':
           if (!this.$.calendar.open) {
-            this.$.calendar.open = true;
+            this.openCalendar();
           }
           break;
       }
@@ -183,7 +205,7 @@ class DatePicker extends AeonElement {
     this.$.calendar.addEventListener('change', event => {
       this.date = event.target.value.date;
       this.time = event.target.value.time;
-      this.$.calendar.open = false;
+      this.closeCalendar();
     });
 
     this.$.calendar.addEventListener('clear', () => {
@@ -282,6 +304,25 @@ class DatePicker extends AeonElement {
     }
   }
 
+  openCalendar() {
+    const rect = this.getBoundingClientRect();
+    const fromTop = rect.top;
+    const fromBottom = window.innerHeight - rect.bottom;
+    const fromLeft = rect.left;
+    const fromRight = window.innerWidth - rect.right;
+
+    this.showAbove = fromBottom < fromTop;
+    this.alignRight = fromRight < fromLeft;
+
+    this.$.calendar.open = true;
+  }
+
+  closeCalendar(dontFocus = false) {
+    this.$.calendar.open = false;
+
+    this._dontFocus = dontFocus;
+  }
+
   parseDate(date, time) {
     try {
       const dateParts = date.split('-');
@@ -317,8 +358,7 @@ class DatePicker extends AeonElement {
         .some(element => element === this);
 
       if (outsideComponent) {
-        this.$.calendar.open = false;
-        this._dontFocus = true;
+        this.closeCalendar(true);
       }
     }
   }
