@@ -78,17 +78,15 @@ class Calendar extends BaseElement {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-        }
 
-        :host([open]) {
-          display: flex;
-        }
-
-        #container {
           position: relative;
           z-index: 1;
           padding: 0.2rem;
           background-color: var(--bgColor);
+        }
+
+        :host([open]) {
+          display: flex;
         }
 
         .week {

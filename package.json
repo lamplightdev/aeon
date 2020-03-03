@@ -1,6 +1,6 @@
 {
   "name": "@lamplightdev/aeon",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A date time picker web component",
   "module": "src/aeon.js",
   "unpkg": "dist/aeon.js",
@@ -8,7 +8,7 @@
     "build": "npx rollup -c",
     "build:watch": "npx rollup -c -w",
     "storybook": "start-storybook",
-    "build:storybook": "build-storybook -c .storybook -o .out"
+    "build:storybook": "build-storybook -c storybook/.storybook -o storybook/.out"
   },
   "repository": {
     "type": "git",
@@ -22,10 +22,12 @@
   "homepage": "https://github.com/lamplightdev/aeon#readme",
   "devDependencies": {
     "@babel/core": "^7.8.6",
+    "@babel/preset-env": "^7.8.6",
     "@storybook/addon-knobs": "^5.3.14",
     "@storybook/html": "^5.3.14",
     "babel-loader": "^8.0.6",
     "rollup": "^1.32.0",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-terser": "^5.2.0"
   }
 }

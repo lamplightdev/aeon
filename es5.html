@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Aeon Date Picker</title>
+    <title>Aeon Date Picker (ES5)</title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,15 +23,43 @@
         border-bottom: 1px solid #eee;
       }
 
+      aeon-datepicker input[type='date'],
+      aeon-datepicker input[type='time'] {
+        display: none;
+      }
+
       :root {
         --cal-rgb: 170, 10, 10;
       }
     </style>
-    <script src="/src/aeon.js" type="module"></script>
+
+    <script
+      crossorigin="anonymous"
+      src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.find%2CArray.prototype.includes%2CString.prototype.padStart"
+    ></script>
+    <script src="https://unpkg.com/@webcomponents/webcomponentsjs@%5E2/webcomponents-loader.js"></script>
+
+    <script>
+      window.WebComponents = window.WebComponents || {
+        waitFor: function(cb) {
+          addEventListener('WebComponentsReady', cb);
+        }
+      };
+
+      WebComponents.waitFor(function() {
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = 'dist/aeon-es5.js';
+        head.appendChild(script);
+
+        window.ShadyCSS &&
+          window.ShadyCSS.styleDocument({ '--cal-rgb': '170, 10, 10' });
+      });
+    </script>
   </head>
   <body>
     <h1>
-      Aeon Date Picker
+      Aeon Date Picker (ES5)
     </h1>
 
     <form>
@@ -75,13 +103,14 @@
       form.addEventListener('submit', function(event) {
         event.preventDefault();
 
-        document.querySelector('#output-start').innerHTML = `${
-          form.querySelector('#date-start').value
-        } ${form.querySelector('#time-start').value}`;
-
-        document.querySelector('#output-end').innerHTML = `${
-          form.querySelector('#date-end').value
-        } ${form.querySelector('#time-end').value}`;
+        document.querySelector('#output-start').innerHTML =
+          form.querySelector('#date-start').value +
+          ' ' +
+          form.querySelector('#time-start').value;
+        document.querySelector('#output-end').innerHTML =
+          form.querySelector('#date-end').value +
+          ' ' +
+          form.querySelector('#time-end').value;
       });
     </script>
   </body>
