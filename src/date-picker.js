@@ -102,7 +102,7 @@ class DatePicker extends BaseElement {
       <style>
         :host {
           position: relative;
-          display: inline;
+          display: inline-block;
 
           --rgb: var(--cal-rgb, 0, 0, 0);
           --bgRgb: var(--cal-bg-rgb, 248, 248, 248);
