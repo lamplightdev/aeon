@@ -4,6 +4,8 @@
 
 - **No dependencies** - a standalone vanilla JS web component
 - **Lightweight** - 5kb gzipped
+- **Use anywhere** - use standalone or directly in your framework of choice with no wrappers
+- **Accessible** - works with mouse/keyboard/screen readers and behaves as a native form element
 - **Locale aware** - uses the browser locale language and date format by default
 - **Themeable** - pass in custom colour schemes
 - **Browser support** - works in all modern browsers and IE11 (with polyfills)
