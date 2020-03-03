@@ -77,13 +77,17 @@ class Calendar extends BaseElement {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-
-          padding: 0.2rem;
-          background-color: var(--bgColor);
         }
 
         :host([open]) {
           display: flex;
+        }
+
+        #container {
+          position: relative;
+          z-index: 1;
+          padding: 0.2rem;
+          background-color: var(--bgColor);
         }
 
         .week {
@@ -194,7 +198,7 @@ class Calendar extends BaseElement {
         }
       </style>
 
-      <div>
+      <div id="container">
         <div id="year-month">
           <aeon-select id="year"></aeon-select>
           <aeon-select id="month"></aeon-select>
