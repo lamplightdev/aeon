@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npx rollup -c",
     "build:watch": "npx rollup -c -w",
-    "storybook": "start-storybook",
+    "storybook": "start-storybook -c storybook/.storybook",
     "build:storybook": "build-storybook -c storybook/.storybook -o storybook/.out"
   },
   "repository": {

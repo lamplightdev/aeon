@@ -8,7 +8,7 @@ import {
 } from '@storybook/addon-knobs';
 
 import './styles.css';
-import '../src/aeon.js';
+import '../../dist/aeon.js';
 
 export default { title: 'Aeon', decorators: [withKnobs] };
 
