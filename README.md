@@ -1,6 +1,6 @@
-# aeon
+# Aeon
 
-> A lean date picker that can be used anywhere
+> A lightweight date picker built with web components that can be used anywhere
 
 - **No dependencies** - a standalone vanilla JS web component
 - **Lightweight** - 5kb gzipped
