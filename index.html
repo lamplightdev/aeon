@@ -18,10 +18,7 @@
         padding: 0.3rem;
       }
     </style>
-    <script
-      src="https://unpkg.com/@lamplightdev/aeon@0.0.2/dist/aeon.js"
-      type="module"
-    ></script>
+    <script src="/src/aeon.js" type="module"></script>
   </head>
   <body>
     <h1>
@@ -30,7 +27,7 @@
 
     <form>
       <p>
-        <label for="date2">Date</label>
+        <label for="date">Date</label>
         <aeon-datepicker default-date="2020-01-01" default-time="19:30">
           <input
             id="date"
@@ -40,6 +37,19 @@
             placeholder="Start date"
           />
           <input id="time" type="time" />
+        </aeon-datepicker>
+      </p>
+      <p>
+        <label for="date2">Date</label>
+        <aeon-datepicker default-date="2020-01-01" default-time="19:30">
+          <input
+            id="date2"
+            name="date2"
+            type="date"
+            value="2020-04-06"
+            placeholder="Start date"
+          />
+          <input id="time2" type="time" />
         </aeon-datepicker>
       </p>
       <button>

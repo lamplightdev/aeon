@@ -10,7 +10,7 @@ import {
 import './styles.css';
 import '../src/aeon.js';
 
-export default { title: 'DatePicker', decorators: [withKnobs] };
+export default { title: 'Aeon', decorators: [withKnobs] };
 
 const startDays = {
   'Sunday (0)': 0,
