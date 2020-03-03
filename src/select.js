@@ -19,7 +19,8 @@ class Select extends BaseElement {
   }
 
   firstRender(_) {
-    _.innerHTML = `
+    const template = document.createElement('template');
+    template.innerHTML = `
       <style>
         select {
           -webkit-appearance: none;
@@ -33,6 +34,10 @@ class Select extends BaseElement {
           background-color: transparent;
           color: var(--color);
           width: 100%;
+        }
+
+        select::-ms-expand {
+          display: none;
         }
 
         .select {
@@ -60,6 +65,10 @@ class Select extends BaseElement {
         </span>
       </div>
     `;
+
+    window.ShadyCSS && ShadyCSS.prepareTemplate(template, 'aeon-select');
+    window.ShadyCSS && ShadyCSS.styleElement(this);
+    _.appendChild(template.content.cloneNode(true));
   }
 
   // simulate focus event which doesn't exist as `this` doesn't have (not do

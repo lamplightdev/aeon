@@ -90,7 +90,7 @@ class DatePicker extends BaseElement {
     super.disconnectedCallback();
 
     if (this._dateInput) {
-      [...this._dateInput.labels].forEach(labelEl => {
+      [...(this._dateInput.labels || [])].forEach(labelEl => {
         labelEl.removeEventListener('click', this.onLabelClick);
       });
     }
@@ -98,7 +98,8 @@ class DatePicker extends BaseElement {
   }
 
   firstRender(_) {
-    _.innerHTML = `
+    const template = document.createElement('template');
+    template.innerHTML = `
       <style>
         :host {
           position: relative;
@@ -159,6 +160,10 @@ class DatePicker extends BaseElement {
 
       <aeon-calendar id="calendar"></aeon-calendar>
     `;
+
+    window.ShadyCSS && ShadyCSS.prepareTemplate(template, 'aeon-datepicker');
+    window.ShadyCSS && ShadyCSS.styleElement(this);
+    _.appendChild(template.content.cloneNode(true));
   }
 
   firstRendered(_) {
@@ -171,7 +176,7 @@ class DatePicker extends BaseElement {
 
       if (this._dateInput) {
         this._output.placeholder = this._dateInput.placeholder;
-        [...this._dateInput.labels].forEach(labelEl => {
+        (this._dateInput.labels || []).forEach(labelEl => {
           labelEl.addEventListener('click', this.onLabelClick);
         });
         this.date = this._dateInput.value;

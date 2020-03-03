@@ -6,8 +6,9 @@
   "unpkg": "dist/aeon.js",
   "scripts": {
     "build": "npx rollup -c",
+    "build:watch": "npx rollup -c -w",
     "storybook": "start-storybook",
-    "build-storybook": "build-storybook -c .storybook -o .out"
+    "build:storybook": "build-storybook -c .storybook -o .out"
   },
   "repository": {
     "type": "git",

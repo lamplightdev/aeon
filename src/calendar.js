@@ -70,7 +70,8 @@ class Calendar extends BaseElement {
   }
 
   firstRender(_) {
-    _.innerHTML = `
+    const template = document.createElement('template');
+    template.innerHTML = `
       <style>
         :host {
           display: none;
@@ -226,6 +227,10 @@ class Calendar extends BaseElement {
         </div>
       </div>
     `;
+
+    window.ShadyCSS && ShadyCSS.prepareTemplate(template, 'aeon-calendar');
+    window.ShadyCSS && ShadyCSS.styleElement(this);
+    _.appendChild(template.content.cloneNode(true));
   }
 
   firstRendered(_) {
@@ -245,19 +250,25 @@ class Calendar extends BaseElement {
       this.month = event.target.value;
     });
 
-    this.$.hours.items = [...Array(24).keys()].map((dummy, i) => ({
-      name: `${i}`.padStart(2, '0'),
-      value: i
-    }));
+    this.$.hours.items = [];
+    for (let i = 0; i < 24; i++) {
+      this.$.hours.items.push({
+        name: `${i}`.padStart(2, '0'),
+        value: i
+      });
+    }
 
     this.$.hours.addEventListener('change', event => {
       this.hours = event.target.value;
     });
 
-    this.$.minutes.items = [...Array(60).keys()].map((dummy, i) => ({
-      name: `${i}`.padStart(2, '0'),
-      value: i
-    }));
+    this.$.minutes.items = [];
+    for (let i = 0; i < 60; i++) {
+      this.$.minutes.items.push({
+        name: `${i}`.padStart(2, '0'),
+        value: i
+      });
+    }
 
     this.$.minutes.addEventListener('change', event => {
       this.minutes = event.target.value;
