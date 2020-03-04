@@ -482,7 +482,9 @@ class Calendar extends BaseElement {
   }
 
   onKeyDown(event) {
-    if (event.key === 'Tab') {
+    if (event.key === 'Enter') {
+      this.confirm();
+    } else if (event.key === 'Tab') {
       this.handleTabKey(event);
     } else if (
       ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)
