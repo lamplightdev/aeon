@@ -6,7 +6,7 @@
 - **Lightweight 🌱** - 5kb gzipped
 - **Use anywhere 🌍** - use standalone or directly in your framework of choice with no wrappers
 - **Progressive enhancement 🥞** - if the code fails to load, fallbacks to a native picker or a simple text box
-- **Accessible 👨‍👩‍👧‍👦‍** - works with mouse/keyboard/screen readers and behaves as a native form element
+- **Accessible 👨‍👩‍👧‍👦‍** - works with mouse/touch/keyboard/screen readers and behaves as a native form element
 - **Locale aware 🇺🇳** - uses the browser locale language and date format by default
 - **Themeable 🎨** - pass in custom colour schemes
 - **Browser support 🖥** - works in all modern browsers on all devices (and IE11 - with polyfills)
@@ -20,6 +20,7 @@
 - [Options](#options)
 - [API](#api)
 - [Theming](#theming)
+- [Contributions](#contributions)
 - [Author](#author)
 - [License](#license)
 
@@ -51,7 +52,7 @@ or reference directly:
 
 If you're using ESM modules - just import Aeon directly into your code:
 
-```
+```js
 // if you're using a bundler that resolves node_modules
 import '@lamplightdev/aeon';
 
@@ -85,7 +86,7 @@ Then use the `<aeon-datepicker>` tag in your HTML wrapping a date input and opti
 ```
 
 - Initial values can be set directly on the wrapped date and time inputs.
-- On selecting a date the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary.
+- On selecting a date with the picker the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary.
 - Alternatively retrieve the values directly from the `<aeon-datepicker>` element or listen for changes (see [API](#api)).
 - If the web component fails to load for whatever reason, the page will still display the native date and time elements if available, or a standard text input if not. Progressive enhancement FTW.
 
@@ -159,17 +160,25 @@ Experiment with all options in the [Storybook](https://lamplightdev.github.io/ae
 | :-------------- | :------------ | :------------ | :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | default-date    | defaultDate   | String        | [now]              | If no value is set on the date input, the date shown in the date picker when opened, format `YYYY-MM-DD`                                                                |
 | default-time    | defaultTime   | String        | [now]              | If no value is set on the time input, the time shown in the date picker when opened,format `HH:mm`                                                                      |
-| start-day       | startDay      | Number        | 1 (Monday)         | Which day to start the week with in the calendar (0 - Sunday, 1 - Monday, etc.)                                                                                         |
+| start-day       | startDay      | Number        | `1` (Monday)       | Which day to start the week with in the calendar (0 - Sunday, 1 - Monday, etc.)                                                                                         |
 | start-year      | startYear     | Number        | current year - 100 | The earliest year to show in the year dropdown                                                                                                                          |
 | end-year        | endYear       | Number        | current year + 5   | The latest year to show in the year dropdown                                                                                                                            |
 | locale          | locale        | String        | browser default    | The locale - this affects the language of the months and days as well as the format of the date and time shown - the format can be further configured using `dateStyle` |
-| confirm-on-date | confirmOnDate | Boolean       | false              | If this is a date input only (no time input) then when a date is selected in the picker the picker will close and the date will be updated                              |
-| use-native      | useNative     | Boolean       | false              | If `true`, use the browser native inputs for date and time where available                                                                                              |
+| confirm-on-date | confirmOnDate | Boolean       | `false`            | If `true` and this is a date input only (no time input) then when a date is selected in the picker will close and the date will be updated                              |
+| use-native      | useNative     | Boolean       | `false`            | If `true`, use the browser native inputs for date and time where available                                                                                              |
 | date-style      | dateStyle     | Object        | locale default     | An object that controls how the date and time are shown - see note below                                                                                                |
 
 ### dateStyle
 
-The date style object is passed as the `options` parameter to the [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/DateTimeFormat) constructor to control the formatting of the displayed date and time. When setting as an attribute (`date-style`) this must be a JSON stringified value.
+The date style object is passed as the `options` parameter to the [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/DateTimeFormat) constructor to control the formatting of the displayed date and time.
+
+When setting as an attribute (`date-style`) this must be a JSON stringified value:
+
+```html
+<aeon-datepicker date-style='{"month":"long"}'>
+  <input type="date" />
+</aeon-datepicker>
+```
 
 ## API
 
@@ -216,13 +225,17 @@ These can be set for all components on the page by setting these properties on t
 }
 ```
 
-or individually on each component either in a stylesheet or inline:
+or individually on each component either in a CSS rule or inline:
 
 ```html
 <aeon-datepicker style="--aeon-rgb: 255, 255, 255; --aeon-bgRgb: 0, 0, 0;">
   <input type="date" id="date" name="date" value="2020-03-20" />
 </aeon-datepicker>
 ```
+
+## Contributions
+
+Any contribtions welcome!
 
 ## Author
 
