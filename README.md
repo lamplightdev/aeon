@@ -18,7 +18,7 @@
 - [Install](#install)
 - [Usage](#usage)
 - [Options](#options)
-- [Events](#events)
+- [API](#api)
 - [Styling](#styling)
 - [Author](#author)
 - [License](#license)
@@ -62,27 +62,29 @@ import 'path/to/node_modules/@lamplightdev/aeon/src/aeon.js';
 Alternatively include Aeon in a script tag:
 
 ```html
-<script src="https://unpkg.com/@lamplightdev/aeon">
+<script src="https://unpkg.com/@lamplightdev/aeon"></script>
 
 <!-- or for the ES5 version -->
 
-<script src="https://unpkg.com/@lamplightdev/aeon/dist/aeon-es5.js">
+<script src="https://unpkg.com/@lamplightdev/aeon/dist/aeon-es5.js"></script>
 ```
 
 Then use the `<aeon-datepicker>` tag in your HTML wrapping a date input and optionally a time input to include a time picker too:
 
 ```html
+<label for="date">Start date</label>
+
 <aeon-datepicker>
-  <input type="date" />
+  <input type="date" id="date" name="date" value="2020-03-20" />
 </aeon-datepicker>
 
 <aeon-datepicker>
   <input type="date" />
-  <input type="time" />
+  <input type="time" id="time" name="time" value="05:19" />
 </aeon-datepicker>
 ```
 
-Initial values can be set directly on the wrapped date and time inputs. On selecting a date the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary. Alternatively retrieve the values directly from the `<aeon-datepicker>` element or listen for changes (see [Events](#events)). If the web component fails to load for whatever reason, the page will still display the native date and time elements if available, or a standard text input if not. Progressive enhancement FTW.
+Initial values can be set directly on the wrapped date and time inputs. On selecting a date the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary. Alternatively retrieve the values directly from the `<aeon-datepicker>` element or listen for changes (see [API](#api)). If the web component fails to load for whatever reason, the page will still display the native date and time elements if available, or a standard text input if not. Progressive enhancement FTW.
 
 ### IE11
 
@@ -150,18 +152,53 @@ All Aeon options can be set declaratively as attributes on the `<aeon-datepicker
 
 Experiment with all options in the [Storybook](https://lamplightdev.github.io/aeon/storybook/static/?path=/story/*)
 
-| Attribute    | Property    | Property type | Default            | Description         |
-| :----------- | :---------- | :------------ | :----------------- | :------------------ |
-| default-date | defaultDate | String        | [now]              | format `YYYY-MM-DD` |
-| default-time | defaultTime | String        | [now]              | format `HH:mm`      |
-| start-day    | startDay    | Number        | 1 (Monday)         |
-| start-year   | startYear   | Number        | current year - 100 |
-| end-year     | endYear     | Number        | current year + 5   |
-| locale       | locale      | String        | browser default    |
-| use-native   | useNative   | Boolean       | false              |
-| -            | dateStyle   | Object        |                    |
+| Attribute       | Property      | Property type | Default            | Description                                                                                                                                                             |
+| :-------------- | :------------ | :------------ | :----------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| default-date    | defaultDate   | String        | [now]              | If no value is set on the date input, the date shown in the date picker when opened, format `YYYY-MM-DD`                                                                |
+| default-time    | defaultTime   | String        | [now]              | If no value is set on the time input, the time shown in the date picker when opened,format `HH:mm`                                                                      |
+| start-day       | startDay      | Number        | 1 (Monday)         | Which day to start the week with in the calendar (0 - Sunday, 1 - Monday, etc.)                                                                                         |
+| start-year      | startYear     | Number        | current year - 100 | The earliest year to show in the year dropdown                                                                                                                          |
+| end-year        | endYear       | Number        | current year + 5   | The latest year to show in the year dropdown                                                                                                                            |
+| confirm-on-date | confirmOnDate | String        | browser default    | If this is a date input only (no time input) then when a date is selected in the picker the picker will close and the date will be updated                              |
+| locale          | locale        | String        | browser default    | The locale - this affects the language of the months and days as well as the format of the date and time shown - the format can be further configured using `dateStyle` |
+| use-native      | useNative     | Boolean       | false              | If `true`, use the browser native inputs for date and time where available                                                                                              |
+| date-style      | dateStyle     | Object        | locale default     | An object that controls how the date and time are shown - see notes below                                                                                               |
 
-## Events
+### dateStyle
+
+The date style object is passed as the `options` parameter to the [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat/DateTimeFormat) constructor to control the formatting of the displayed date and time. When setting as an attribute (`date-style`) this must be a JSON stringified value.
+
+## API
+
+The `value` property is an object containing two fields, `date` (YYYY-MM-DD) and `time` (HH:mm) of the currently selected date and time:
+
+```js
+console.log(document.querySelector('aeon-datepicker').value);
+/*
+  logs:
+  {
+    date: '2020-03-20',
+    time: '13:56
+  }
+*/
+});
+```
+
+A `change` event is dispatched when a new date has been selected:
+
+```js
+document.querySelector('aeon-datepicker').addEventListener('change', event => {
+  console.log(event.target.value);
+
+  /*
+  logs:
+  {
+    date: '2020-03-20',
+    time: '13:56
+  }
+  */
+});
+```
 
 ## Styling
 
