@@ -59,7 +59,7 @@ export const dateOnly = () => {
       locale="${knobs.locale}"
       ${knobs.confirmOnDate ? `confirm-on-date` : ''}
       ${knobs.useNative ? `use-native` : ''}
-      style="--rgb: ${getRGB(knobs.fgColor)}; --bgRgb: ${getRGB(
+      style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
     knobs.bgColor
   )};"
     >
@@ -110,7 +110,7 @@ export const dateAndTime = () => {
       end-year="${knobs.endYear}"
       locale="${knobs.locale}"
       ${knobs.useNative ? `use-native` : ''}
-      style="--rgb: ${getRGB(knobs.fgColor)}; --bgRgb: ${getRGB(
+      style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
     knobs.bgColor
   )};"
     >

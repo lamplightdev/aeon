@@ -22,13 +22,13 @@ class Calendar extends BaseElement {
         type: String
       },
       startYear: {
-        type: String
+        type: Number
       },
       endYear: {
-        type: String
+        type: Number
       },
       startDay: {
-        type: String
+        type: Number
       },
       days: {
         type: Array

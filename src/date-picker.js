@@ -25,13 +25,13 @@ class DatePicker extends BaseElement {
         type: Object
       },
       startYear: {
-        type: String
+        type: Number
       },
       endYear: {
-        type: String
+        type: Number
       },
       startDay: {
-        type: String
+        type: Number
       },
       defaultDate: {
         type: String
@@ -105,8 +105,8 @@ class DatePicker extends BaseElement {
           position: relative;
           display: inline-block;
 
-          --rgb: var(--cal-rgb, 0, 0, 0);
-          --bgRgb: var(--cal-bg-rgb, 248, 248, 248);
+          --rgb: var(--aeon-rgb, 0, 0, 0);
+          --bgRgb: var(--aeon-bgRgb, 248, 248, 248);
           --color: rgb(var(--rgb));
           --hintColor: rgba(var(--rgb), 0.2);
           --bgColor: rgb(var(--bgRgb));
@@ -114,7 +114,8 @@ class DatePicker extends BaseElement {
           color: var(--color);
         }
 
-        slot:not([name]) {
+        ::slotted(input[type=date]),
+        ::slotted(input[type=time]) {
           display: none;
         }
 

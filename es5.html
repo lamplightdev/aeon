@@ -23,13 +23,8 @@
         border-bottom: 1px solid #eee;
       }
 
-      aeon-datepicker input[type='date'],
-      aeon-datepicker input[type='time'] {
-        display: none;
-      }
-
       :root {
-        --cal-rgb: 170, 10, 10;
+        --aeon-rgb: 170, 10, 10;
       }
     </style>
 
@@ -53,7 +48,7 @@
         head.appendChild(script);
 
         window.ShadyCSS &&
-          window.ShadyCSS.styleDocument({ '--cal-rgb': '170, 10, 10' });
+          window.ShadyCSS.styleDocument({ '--aeon-rgb': '170, 10, 10' });
       });
     </script>
   </head>
