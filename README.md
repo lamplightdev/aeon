@@ -19,7 +19,7 @@
 - [Usage](#usage)
 - [Options](#options)
 - [API](#api)
-- [Styling](#styling)
+- [Theming](#theming)
 - [Author](#author)
 - [License](#license)
 
@@ -79,7 +79,7 @@ Then use the `<aeon-datepicker>` tag in your HTML wrapping a date input and opti
 </aeon-datepicker>
 
 <aeon-datepicker>
-  <input type="date" />
+  <input type="date" id="date" name="date" value="2020-03-20" />
   <input type="time" id="time" name="time" value="05:19" />
 </aeon-datepicker>
 ```
@@ -162,10 +162,10 @@ Experiment with all options in the [Storybook](https://lamplightdev.github.io/ae
 | start-day       | startDay      | Number        | 1 (Monday)         | Which day to start the week with in the calendar (0 - Sunday, 1 - Monday, etc.)                                                                                         |
 | start-year      | startYear     | Number        | current year - 100 | The earliest year to show in the year dropdown                                                                                                                          |
 | end-year        | endYear       | Number        | current year + 5   | The latest year to show in the year dropdown                                                                                                                            |
-| confirm-on-date | confirmOnDate | String        | browser default    | If this is a date input only (no time input) then when a date is selected in the picker the picker will close and the date will be updated                              |
 | locale          | locale        | String        | browser default    | The locale - this affects the language of the months and days as well as the format of the date and time shown - the format can be further configured using `dateStyle` |
+| confirm-on-date | confirmOnDate | Boolean       | false              | If this is a date input only (no time input) then when a date is selected in the picker the picker will close and the date will be updated                              |
 | use-native      | useNative     | Boolean       | false              | If `true`, use the browser native inputs for date and time where available                                                                                              |
-| date-style      | dateStyle     | Object        | locale default     | An object that controls how the date and time are shown - see notes below                                                                                               |
+| date-style      | dateStyle     | Object        | locale default     | An object that controls how the date and time are shown - see note below                                                                                                |
 
 ### dateStyle
 
@@ -203,7 +203,26 @@ document.querySelector('aeon-datepicker').addEventListener('change', event => {
 });
 ```
 
-## Styling
+## Theming
+
+The foreground and background colours of the date picker can be configured using CSS custom properties. `--aeon-rgb` can be set to the RGB values of the foreground colour, while `--aeon-bgRgb` is used for the background colour.
+
+These can be set for all components on the page by setting these properties on the `:root` element:
+
+```css
+:root {
+  --aeon-rgb: 255, 255, 255;
+  --aeon-bgRgb: 0, 0, 0;
+}
+```
+
+or individually on each component either in a stylesheet or inline:
+
+```html
+<aeon-datepicker style="--aeon-rgb: 255, 255, 255; --aeon-bgRgb: 0, 0, 0;">
+  <input type="date" id="date" name="date" value="2020-03-20" />
+</aeon-datepicker>
+```
 
 ## Author
 
