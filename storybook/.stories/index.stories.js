@@ -57,7 +57,7 @@ export const dateOnly = () => {
       start-year="${knobs.startYear}"
       end-year="${knobs.endYear}"
       locale="${knobs.locale}"
-      date-style="${JSON.stringify(knobs.dateStyle)}"
+      date-style='${JSON.stringify(knobs.dateStyle)}'
       ${knobs.confirmOnDate ? `confirm-on-date` : ''}
       ${knobs.useNative ? `use-native` : ''}
       style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
@@ -107,7 +107,7 @@ export const dateAndTime = () => {
       start-year="${knobs.startYear}"
       end-year="${knobs.endYear}"
       locale="${knobs.locale}"
-      date-style="${JSON.stringify(knobs.dateStyle)}"
+      date-style='${JSON.stringify(knobs.dateStyle)}'
       ${knobs.useNative ? `use-native` : ''}
       style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
     knobs.bgColor
