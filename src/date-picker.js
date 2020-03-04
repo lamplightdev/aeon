@@ -119,12 +119,13 @@ class DatePicker extends BaseElement {
           display: none;
         }
 
-        :host([has-native][use-native]) slot {
-          display: none;
+        :host([has-native][use-native]) ::slotted(input[type=date]),
+        :host([has-native][use-native]) ::slotted(input[type=time]) {
+          display: inline-flex;
         }
 
-        :host([has-native][use-native]) slot:not([name]) {
-          display: contents;
+        :host([has-native][use-native]) slot[name=output] {
+          display: none;
         }
 
         aeon-calendar {
