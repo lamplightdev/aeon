@@ -4,13 +4,9 @@ class BaseElement extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return Object.keys(this.props)
-      .filter(propName => {
-        return !this.props[propName].noReflect;
-      })
-      .map(propName => {
-        return this.attributeName(propName);
-      });
+    return Object.keys(this.props).map(propName => {
+      return this.attributeName(propName);
+    });
   }
 
   static attributeName(propName) {
@@ -50,13 +46,21 @@ class BaseElement extends HTMLElement {
       this._props = {};
 
       Object.keys(this.constructor.props).forEach(propName => {
+        const propertyInfo = this.constructor.props[propName];
         const attrName = this.propToAttr[propName];
 
-        const initialValue = this.hasAttribute(attrName)
-          ? this.getAttribute(attrName)
-          : initialProps[propName] !== undefined
-          ? initialProps[propName]
-          : this[propName];
+        let initialValue = this[propName];
+
+        if (this.hasAttribute(attrName)) {
+          initialValue = this.getAttribute(attrName);
+          if ([Array, Object].includes(propertyInfo.type)) {
+            try {
+              initialValue = JSON.parse(initialValue);
+            } catch (err) {}
+          }
+        } else if (initialProps[propName] !== undefined) {
+          initialValue = initialProps[propName];
+        }
 
         Object.defineProperty(this, propName, {
           set: this.setter(propName),
@@ -203,7 +207,9 @@ class BaseElement extends HTMLElement {
         break;
       case Array:
       case Object:
-        propertyValue = JSON.parse(propertyValue);
+        try {
+          propertyValue = JSON.parse(propertyValue);
+        } catch (err) {}
       case String:
         break;
     }
