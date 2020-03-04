@@ -51,11 +51,11 @@ import 'path/to/node_modules/@lamplightdev/aeon/src/aeon.js';
 Alternatively include Aeon in a script tag:
 
 ```
-<script type="module" src="https://unpkg.com/@lamplightdev/aeon@0.0.3/dist/aeon.js">
+<script type="module" src="https://unpkg.com/@lamplightdev/aeon">
 
 <!-- or for the ES5 version -->
 
-<script src="https://unpkg.com/@lamplightdev/aeon@0.0.3/dist/aeon-es5.js">
+<script src="https://unpkg.com/@lamplightdev/aeon/dist/aeon-es5.js">
 ```
 
 Then use the `<aeon-datepicker>` tag in your HTML wrapping a date input and optionally a time input:
