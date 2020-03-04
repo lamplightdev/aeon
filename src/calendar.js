@@ -30,9 +30,6 @@ class Calendar extends BaseElement {
       startDay: {
         type: Number
       },
-      days: {
-        type: Array
-      },
       year: {
         type: Number
       },
@@ -59,7 +56,6 @@ class Calendar extends BaseElement {
 
     this.showTime = false;
     this.confirmOnDate = false;
-    this.days = [];
     this.open = false;
   }
 
@@ -333,17 +329,17 @@ class Calendar extends BaseElement {
 
     now.setMonth(0);
     now.setDate(1);
-    this.days = [];
+    const days = [];
     for (let i = 0; i < 7; i++) {
       let dayNum = now.getDay();
-      this.days.push({
+      days.push({
         num: dayNum,
         name: now.toLocaleString(this.locale || undefined, { weekday: 'short' })
       });
       now.setDate(i + 2);
     }
     const startDayOffset = 7 - this.startDay;
-    this.days.sort(
+    days.sort(
       (a, b) => ((a.num + startDayOffset) % 7) - ((b.num + startDayOffset) % 7)
     );
 
@@ -367,7 +363,7 @@ class Calendar extends BaseElement {
 
     this.$.calendar.innerHTML = `
       <div class="week">
-        ${this.days.map(day => `<div class="day">${day.name}</div>`).join('')}
+        ${days.map(day => `<div class="day">${day.name}</div>`).join('')}
       </div>
 
       ${[0, 1, 2, 3, 4, 5]
@@ -376,7 +372,7 @@ class Calendar extends BaseElement {
 
           return `
           <div class="week">
-            ${this.days
+            ${days
               .map(day => {
                 const dayNum = day.num % 7;
                 if (dayNum === monthStartDay) {
