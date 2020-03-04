@@ -84,7 +84,10 @@ Then use the `<aeon-datepicker>` tag in your HTML wrapping a date input and opti
 </aeon-datepicker>
 ```
 
-Initial values can be set directly on the wrapped date and time inputs. On selecting a date the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary. Alternatively retrieve the values directly from the `<aeon-datepicker>` element or listen for changes (see [API](#api)). If the web component fails to load for whatever reason, the page will still display the native date and time elements if available, or a standard text input if not. Progressive enhancement FTW.
+- Initial values can be set directly on the wrapped date and time inputs.
+- On selecting a date the component will update the wrapped date and time inputs with the selected values (`YYYY-MM-DD` and `HH:mm` respectively), so you can add Aeon to an existing form with no glue code necessary.
+- Alternatively retrieve the values directly from the `<aeon-datepicker>` element or listen for changes (see [API](#api)).
+- If the web component fails to load for whatever reason, the page will still display the native date and time elements if available, or a standard text input if not. Progressive enhancement FTW.
 
 ### IE11
 
