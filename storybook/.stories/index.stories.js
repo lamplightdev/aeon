@@ -38,13 +38,13 @@ export const dateOnly = () => {
     startYear: text('Start year', '1900'),
     endYear: text('End year', '2050'),
     locale: text('Locale', ''),
-    confirmOnDate: boolean('Confirm on date', false),
-    useNative: boolean('Use native', false),
     dateStyle: object('Date style', {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric'
     }),
+    confirmOnDate: boolean('Confirm on date', false),
+    useNative: boolean('Use native', false),
     fgColor: color('Foreground Color', 'rgb(0, 0, 0)'),
     bgColor: color('Background Color', 'rgb(248, 248, 248)')
   };
@@ -57,6 +57,7 @@ export const dateOnly = () => {
       start-year="${knobs.startYear}"
       end-year="${knobs.endYear}"
       locale="${knobs.locale}"
+      date-style="${JSON.stringify(knobs.dateStyle)}"
       ${knobs.confirmOnDate ? `confirm-on-date` : ''}
       ${knobs.useNative ? `use-native` : ''}
       style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
@@ -72,9 +73,6 @@ export const dateOnly = () => {
     </aeon-datepicker>
   `;
 
-  const datePicker = container.querySelector('aeon-datepicker');
-  datePicker.dateStyle = knobs.dateStyle;
-
   return container.firstElementChild;
 };
 
@@ -88,7 +86,6 @@ export const dateAndTime = () => {
     startYear: text('Start year', '1900'),
     endYear: text('End year', '2050'),
     locale: text('Locale', ''),
-    useNative: boolean('Use native', false),
     dateStyle: object('Date style', {
       year: 'numeric',
       month: 'numeric',
@@ -96,6 +93,7 @@ export const dateAndTime = () => {
       hours: 'numeric',
       minutes: 'numeric'
     }),
+    useNative: boolean('Use native', false),
     fgColor: color('Foreground Color', 'rgb(0, 0, 0)'),
     bgColor: color('Background Color', 'rgb(248, 248, 248)')
   };
@@ -109,6 +107,7 @@ export const dateAndTime = () => {
       start-year="${knobs.startYear}"
       end-year="${knobs.endYear}"
       locale="${knobs.locale}"
+      date-style="${JSON.stringify(knobs.dateStyle)}"
       ${knobs.useNative ? `use-native` : ''}
       style="--aeon-rgb: ${getRGB(knobs.fgColor)}; --aeon-bgRgb: ${getRGB(
     knobs.bgColor
@@ -128,9 +127,6 @@ export const dateAndTime = () => {
       />
     </aeon-datepicker>
   `;
-
-  const datePicker = container.querySelector('aeon-datepicker');
-  datePicker.dateStyle = knobs.dateStyle;
 
   return container.firstElementChild;
 };

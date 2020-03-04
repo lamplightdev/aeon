@@ -6,7 +6,7 @@ class BaseElement extends HTMLElement {
   static get observedAttributes() {
     return Object.keys(this.props)
       .filter(propName => {
-        return [Boolean, Number, String].includes(this.props[propName].type);
+        return !this.props[propName].noReflect;
       })
       .map(propName => {
         return this.attributeName(propName);
@@ -152,18 +152,22 @@ class BaseElement extends HTMLElement {
 
       const propertyInfo = this.constructor.props[propName];
 
-      if ([Boolean, String, Number].includes(propertyInfo.type)) {
-        if (this.constructor.observedAttributes.includes(attrName)) {
-          let attributeValue = value;
+      if (this.constructor.observedAttributes.includes(attrName)) {
+        let attributeValue = value;
 
-          if (propertyInfo.type === Boolean) {
-            attributeValue = attributeValue || attributeValue === '';
-            if (attributeValue) {
-              this.setAttribute(attrName, '');
-            } else {
-              this.removeAttribute(attrName);
-            }
-          } else if (this.getAttribute(attrName) !== attributeValue) {
+        if (propertyInfo.type === Boolean) {
+          attributeValue = attributeValue || attributeValue === '';
+          if (attributeValue) {
+            this.setAttribute(attrName, '');
+          } else {
+            this.removeAttribute(attrName);
+          }
+        } else {
+          if ([Array, Object].includes(propertyInfo.type)) {
+            attributeValue = JSON.stringify(attributeValue);
+          }
+
+          if (this.getAttribute(attrName) !== attributeValue) {
             if ([null, undefined].includes(attributeValue)) {
               this.removeAttribute(attrName);
             } else {
@@ -197,6 +201,9 @@ class BaseElement extends HTMLElement {
       case Number:
         propertyValue = Number(propertyValue);
         break;
+      case Array:
+      case Object:
+        propertyValue = JSON.parse(propertyValue);
       case String:
         break;
     }
