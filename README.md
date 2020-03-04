@@ -235,7 +235,7 @@ or individually on each component either in a CSS rule or inline:
 
 ## Contributions
 
-Any contribtions welcome!
+Any contributions welcome!
 
 ## Author
 
