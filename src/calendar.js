@@ -445,11 +445,7 @@ class Calendar extends BaseElement {
     );
   }
 
-  onKeyDown(event) {
-    if (event.key !== 'Tab') {
-      return;
-    }
-
+  handleTabKey(event) {
     const activeElement = this.shadowRoot.activeElement;
 
     if (event.shiftKey && activeElement === this._firstFocusableEl) {
@@ -458,6 +454,40 @@ class Calendar extends BaseElement {
     } else if (!event.shiftKey && activeElement === this._lastFocusableEl) {
       this._firstFocusableEl.focus();
       event.preventDefault();
+    }
+  }
+
+  handleArrowKeys(event) {
+    let diff = 0;
+    switch (event.key) {
+      case 'ArrowUp':
+        diff = -7;
+        break;
+      case 'ArrowRight':
+        diff = 1;
+        break;
+      case 'ArrowLeft':
+        diff = -1;
+        break;
+      case 'ArrowDown':
+        diff = 7;
+        break;
+    }
+
+    const date = new Date(this.year, this.month, this.day);
+    date.setDate(this.day + diff);
+    this.year = date.getFullYear();
+    this.month = date.getMonth();
+    this.day = date.getDate();
+  }
+
+  onKeyDown(event) {
+    if (event.key === 'Tab') {
+      this.handleTabKey(event);
+    } else if (
+      ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft'].includes(event.key)
+    ) {
+      this.handleArrowKeys(event);
     }
   }
 
