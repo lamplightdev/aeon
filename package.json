@@ -1,6 +1,6 @@
 {
   "name": "@lamplightdev/aeon",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A date time picker web component",
   "module": "src/aeon.js",
   "unpkg": "dist/aeon.js",
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/lamplightdev/aeon.git"
   },
-  "author": "Chris Haynes",
+  "author": "Chris Haynes<chris@lamplightdev.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/lamplightdev/aeon/issues"
