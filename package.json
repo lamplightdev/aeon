@@ -2,6 +2,7 @@
   "name": "@lamplightdev/aeon",
   "version": "0.0.8",
   "description": "A date time picker web component",
+  "main": "dist/aeon.js",
   "module": "src/aeon.js",
   "unpkg": "dist/aeon.js",
   "scripts": {
