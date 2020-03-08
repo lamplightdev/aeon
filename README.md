@@ -63,7 +63,7 @@ import 'path/to/node_modules/@lamplightdev/aeon/src/aeon.js';
 Alternatively include Aeon in a script tag:
 
 ```html
-<script src="https://unpkg.com/@lamplightdev/aeon"></script>
+<script type="module" src="https://unpkg.com/@lamplightdev/aeon"></script>
 
 <!-- or for the ES5 version -->
 
